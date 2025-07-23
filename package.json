@@ -9,13 +9,13 @@
   ],
   "homepage": "https://skribby.io",
   "bugs": {
-    "url": "https://github.com/skribby.io/js-sdk/issues"
+    "url": "https://github.com/skribby-io/js-sdk/issues"
   },
   "author": "Skribby <it@skribby.io> (https://skribby.io)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skribby.io/js-sdk.git"
+    "url": "git+https://github.com/skribby-io/js-sdk.git"
   },
   "files": [
     "dist"

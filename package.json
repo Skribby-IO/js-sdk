@@ -23,6 +23,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
+    "dev": "tsc --watch",
     "build": "tsc",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
@@ -32,7 +33,14 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
+    "@types/ws": "^8.18.1",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.9"
   }
 }

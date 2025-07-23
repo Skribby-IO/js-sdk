@@ -1,5 +1,11 @@
 # sdk
 
+## 0.1.2
+
+### Patch Changes
+
+- 05ca3d0: Fix incorrect repository URLs in package.json
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,0 +1,8 @@
+# Packagges
+node_modules/
+
+# Build files
+dist/
+
+# IDE and Editor specific files
+.idea/

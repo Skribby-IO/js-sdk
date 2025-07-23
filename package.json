@@ -1,0 +1,35 @@
+{
+  "name": "skribby-sdk",
+  "version": "0.0.1",
+  "description": "Typescript SDK for Skribby API",
+  "keywords": [
+    "skribby",
+    "typescript",
+    "meeting bots"
+  ],
+  "homepage": "https://skribby.io",
+  "bugs": {
+    "url": "https://github.com/skribby.io/js-sdk/issues"
+  },
+  "author": "Skribby <it@skribby.io> (https://skribby.io)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skribby.io/js-sdk.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write .",
+    "check-format": "prettier --check .",
+    "ci": "npm run build && npm run check-format"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3"
+  }
+}

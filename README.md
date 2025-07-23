@@ -14,14 +14,14 @@ npm install @skribby/sdk
 import { createClient } from '@skribby/sdk';
 
 const client = createClient({
-  api_key: 'SKRIBBY_API_KEY'
+  api_key: 'SKRIBBY_API_KEY',
 });
 
 const bot = client.createBot({
   bot_name: 'My Meeting Bot',
   meeting_url: 'https://meet.google.com/abc-defg-hij',
   service: 'gmeet',
-  transcription_model: 'deepgram'
+  transcription_model: 'deepgram',
 });
 
 // If the chosen transcription model is real-time

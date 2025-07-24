@@ -4,11 +4,11 @@ import { RealtimeClient } from './RealtimeClient.js';
 
 export class MeetingBot {
   private readonly client: SkribbyClient;
-  private data: MeetingBotData;
+  private bot_data: MeetingBotData;
 
   public constructor(client: SkribbyClient, api_data: MeetingBotApiData) {
     this.client = client;
-    this.data = this.parseApiData(api_data);
+    this.bot_data = this.parseApiData(api_data);
   }
 
   protected parseApiData(api_data: any): MeetingBotData {
@@ -45,11 +45,11 @@ export class MeetingBot {
   }
 
   public get id(): string {
-    return this.data.id;
+    return this.bot_data.id;
   }
 
-  public getData(): MeetingBotApiData {
-    return this.data;
+  public get data(): MeetingBotData {
+    return this.bot_data;
   }
 
   public async stop(): Promise<void> {
@@ -66,7 +66,7 @@ export class MeetingBot {
       'GET',
     );
     if (!api_data) throw new Error(`Bot with ID ${this.id} not found`);
-    this.data = this.parseApiData(api_data);
+    this.bot_data = this.parseApiData(api_data);
   }
 
   public async sendChatMessage(message: string): Promise<void> {
@@ -76,18 +76,18 @@ export class MeetingBot {
   }
 
   public getRealtimeClient() {
-    if (!this.data.transcription_model.includes('realtime')) {
+    if (!this.bot_data.transcription_model.includes('realtime')) {
       throw new Error(
         `Realtime client is not available for bot with ID ${this.id}. This bot does not use a realtime transcription model.`,
       );
     }
 
-    if (!this.data.websocket_url) {
+    if (!this.bot_data.websocket_url) {
       throw new Error(
         `Realtime client is not available for bot with ID ${this.id}. Websocket server no longer available.`,
       );
     }
 
-    return new RealtimeClient(this.data.websocket_url);
+    return new RealtimeClient(this.bot_data.websocket_url);
   }
 }

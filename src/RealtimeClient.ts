@@ -3,7 +3,7 @@ import type { RealtimeEventMap } from './types.js';
 export class RealtimeClient {
   private readonly url: string;
   private ws: WebSocket | null = null;
-  private wsConnected: boolean = false;
+  private ws_connected: boolean = false;
   private listeners: {
     [K in keyof RealtimeEventMap]?: Array<(data: RealtimeEventMap[K]) => void>;
   } = {};
@@ -13,7 +13,7 @@ export class RealtimeClient {
   }
 
   public get connected(): boolean {
-    return this.wsConnected;
+    return this.ws_connected;
   }
 
   on<K extends keyof RealtimeEventMap>(
@@ -31,7 +31,7 @@ export class RealtimeClient {
       this.ws = new WebSocket(this.url);
 
       this.ws.on('open', () => {
-        this.wsConnected = true;
+        this.ws_connected = true;
         resolve();
       });
 
@@ -53,14 +53,24 @@ export class RealtimeClient {
       });
 
       this.ws.on('error', (error) => {
-        this.wsConnected = false;
+        this.ws_connected = false;
         reject(error);
       });
 
       this.ws.on('close', () => {
-        this.wsConnected = false;
-        console.log('WebSocket connection closed');
+        this.ws_connected = false;
       });
+    });
+  }
+
+  public async disconnect(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this.ws) {
+        this.ws.close();
+        this.ws = null;
+      }
+      this.ws_connected = false;
+      resolve();
     });
   }
 }

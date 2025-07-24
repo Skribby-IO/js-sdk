@@ -43,4 +43,4 @@ realtimeClient.connect();
 
 ## Documentation
 
-Refer to the [Skribby documentation page](https://docs.skribby.com/) for more details.
+Refer to the [Skribby documentation page](https://docs.skribby.io/) for more details.

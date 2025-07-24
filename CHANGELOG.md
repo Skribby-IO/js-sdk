@@ -1,5 +1,11 @@
 # sdk
 
+## 0.1.3
+
+### Patch Changes
+
+- 68fb821: Renamed internal variables + made all classes and errors available though the package
+
 ## 0.1.2
 
 ### Patch Changes

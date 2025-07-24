@@ -1,5 +1,11 @@
 # sdk
 
+## 0.1.4
+
+### Patch Changes
+
+- 9ded495: Fix typo in README
+
 ## 0.1.3
 
 ### Patch Changes

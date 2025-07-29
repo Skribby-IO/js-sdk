@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import type { RealtimeEventMap } from './types.js';
+import type { RealtimeActionMap, RealtimeEventMap } from './types.js';
 export class RealtimeClient {
   private readonly url: string;
   private ws: WebSocket | null = null;
@@ -16,7 +16,7 @@ export class RealtimeClient {
     return this.ws_connected;
   }
 
-  on<K extends keyof RealtimeEventMap>(
+  public on<K extends keyof RealtimeEventMap>(
     eventName: K,
     callback: (data: RealtimeEventMap[K]) => void,
   ): void {
@@ -24,6 +24,18 @@ export class RealtimeClient {
       this.listeners[eventName] = [];
     }
     this.listeners[eventName]!.push(callback);
+  }
+
+  public send<K extends keyof RealtimeActionMap>(
+    action: K,
+    data: RealtimeActionMap[K],
+  ): void {
+    this.ws?.send(
+      JSON.stringify({
+        action: action,
+        data: data,
+      }),
+    );
   }
 
   public async connect(): Promise<void> {

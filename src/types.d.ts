@@ -47,7 +47,7 @@ export type CreateMeetingBotOptions = {
     time_limit?: number; // in minutes
     last_person_detection?: number; // in minutes
     silence_detection?: number; // in minutes
-  }
+  };
   authentication?: {
     account_id?: string;
     zoom_zak_token?: string;
@@ -68,6 +68,7 @@ export type MeetingBotApiData = {
   recording_url: null | string;
   recording_available_until: null | string;
   websocket_url: null | string;
+  websocket_read_only_url: null | string;
   video: boolean;
   lang: null | string;
   detected_lang: null | string;
@@ -154,8 +155,32 @@ export type RealtimeEventMap = {
     speaker: number;
     speaker_name: string | null;
   };
+  'chat-message': {
+    username: string;
+    content: string;
+    user_avatar: string | null;
+  };
+  'participant-tracked': {
+    participantId: string;
+    participantName: string;
+  };
+  'started-speaking': {
+    participantId: string;
+    participantName: string;
+  };
+  'stopped-speaking': {
+    participantId: string;
+    participantName: string;
+  };
   stop: undefined;
   error: {
     message: string;
   };
+};
+
+export type RealtimeActionMap = {
+  'chat-message': {
+    content: string;
+  };
+  stop: undefined;
 };

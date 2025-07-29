@@ -1,5 +1,11 @@
 # sdk
 
+## 0.1.5
+
+### Patch Changes
+
+- c2e8cfb: Add support for several new features
+
 ## 0.1.4
 
 ### Patch Changes

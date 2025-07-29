@@ -43,6 +43,11 @@ export type CreateMeetingBotOptions = {
   scheduled_start_time?: Date;
   profanity_filter?: boolean;
   initial_chat_message?: string;
+  stop_options?: {
+    time_limit?: number; // in minutes
+    last_person_detection?: number; // in minutes
+    silence_detection?: number; // in minutes
+  }
   authentication?: {
     account_id?: string;
     zoom_zak_token?: string;

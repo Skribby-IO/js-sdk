@@ -17,28 +17,32 @@ const client = createClient({
   api_key: 'SKRIBBY_API_KEY',
 });
 
-const bot = client.createBot({
-  bot_name: 'My Meeting Bot',
-  meeting_url: 'https://meet.google.com/abc-defg-hij',
-  service: 'gmeet',
-  transcription_model: 'deepgram',
-});
+(async () => {
+  const bot = await client.createBot({
+    bot_name: 'My Meeting Bot',
+    meeting_url: 'https://meet.google.com/abc-defg-hij',
+    service: 'gmeet',
+    transcription_model: 'deepgram-realtime',
+  });
 
-// If the chosen transcription model is real-time
-const realtimeClient = bot.getRealtimeClient();
+  // If the chosen transcription model is real-time
+  const realtimeClient = bot.getRealtimeClient();
 
-realtimeClient.on('ts', (data) => {
-  console.log(`${data.speaker_name} said: ${data.transcript}`);
+  realtimeClient.on('ts', (data) => {
+    console.log(`${data.speaker_name} said: ${data.transcript}`);
 
-  if (data.transcript.toLowerCase().includes('hello')) {
-    bot.sendChatMessage('Hello back!');
-  }
-  if (data.transcript.toLowerCase().includes('stop the bot')) {
-    bot.stop();
-  }
-});
+    if (data.transcript.toLowerCase().includes('hello')) {
+      realtimeClient.send('chat-message', {
+        content: 'Hello back! :)',
+      });
+    }
+    if (data.transcript.toLowerCase().includes('stop the bot')) {
+      realtimeClient.send('stop');
+    }
+  });
 
-realtimeClient.connect();
+  realtimeClient.connect();
+})();
 ```
 
 ## Documentation

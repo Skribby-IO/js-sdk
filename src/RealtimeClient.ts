@@ -28,7 +28,7 @@ export class RealtimeClient {
 
   public send<K extends keyof RealtimeActionMap>(
     action: K,
-    data: RealtimeActionMap[K],
+    data?: RealtimeActionMap[K],
   ): void {
     this.ws?.send(
       JSON.stringify({

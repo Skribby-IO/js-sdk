@@ -1,5 +1,11 @@
 # sdk
 
+## 0.1.6
+
+### Patch Changes
+
+- edbdadf: Small fix + README update
+
 ## 0.1.5
 
 ### Patch Changes

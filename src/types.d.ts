@@ -43,6 +43,34 @@ export type CreateMeetingBotOptions = {
   scheduled_start_time?: Date;
   profanity_filter?: boolean;
   initial_chat_message?: string;
+  custom_vocabulary?: string[];
+  stop_options?: {
+    time_limit?: number; // in minutes
+    last_person_detection?: number; // in minutes
+    silence_detection?: number; // in minutes
+  };
+  authentication?: {
+    account_id?: string;
+    zoom_zak_token?: string;
+    always_authenticate?: boolean;
+  };
+};
+
+export type UpdateMeetingBotOptions = {
+  meeting_url?: string;
+  bot_name?: string;
+  bot_avatar_file?: File;
+  bot_avatar_url?: string;
+  time_limit?: number; // in seconds
+  video?: boolean;
+  lang?: string;
+  webhook_url?: string;
+  store_recording_for_1_year?: boolean;
+  scheduled_start_time?: Date;
+  profanity_filter?: boolean;
+  initial_chat_message?: string;
+  transcription_model?: TranscriptionModel;
+  custom_vocabulary?: string[];
   stop_options?: {
     time_limit?: number; // in minutes
     last_person_detection?: number; // in minutes
@@ -183,4 +211,74 @@ export type RealtimeActionMap = {
     content: string;
   };
   stop: undefined;
+};
+
+// Recording Types
+
+export type RecordingStatus =
+  | 'pending'
+  | 'processing'
+  | 'transcribing'
+  | 'completed'
+  | 'failed';
+
+export type CreateRecordingOptions =
+  | {
+      // Option 1: Upload via URL
+      recording_url: string;
+      transcription_model: TranscriptionModel;
+      lang?: string;
+      profanity_filter?: boolean;
+      custom_vocabulary?: string[];
+      webhook_url?: string;
+    }
+  | {
+      // Option 2: Re-transcribe from meeting bot
+      meeting_bot_id: string;
+      transcription_model?: TranscriptionModel;
+      lang?: string;
+      profanity_filter?: boolean;
+      custom_vocabulary?: string[];
+      webhook_url?: string;
+    };
+
+export type RecordingApiData = {
+  id: string;
+  status: RecordingStatus;
+  recording_url: null | string;
+  recording_available_until: null | string;
+  transcription_model: TranscriptionModel;
+  lang: null | string;
+  detected_lang: null | string;
+  profanity_filter: boolean;
+  created_at: null | string;
+  finished_at: null | string;
+  transcript: {
+    start?: number;
+    end?: number;
+    speaker?: number;
+    speaker_name?: null | string;
+    confidence?: number;
+    transcript: string;
+    utterances?: {
+      start: number;
+      end: number;
+      speaker: number;
+      confidence: number;
+      transcript: string;
+      words: {
+        start: number;
+        end: number;
+        speaker: number;
+        confidence: number;
+        word: string;
+      }[];
+    };
+  }[];
+};
+
+export type RecordingData = RecordingApiData & {
+  created_at: Date | null;
+  finished_at: Date | null;
+  recording_available_until: Date | null;
 };

@@ -1,5 +1,12 @@
-import type { CreateMeetingBotOptions, MeetingBotApiData } from './types.js';
+import type {
+  CreateMeetingBotOptions,
+  MeetingBotApiData,
+  UpdateMeetingBotOptions,
+  CreateRecordingOptions,
+  RecordingApiData,
+} from './types.js';
 import { MeetingBot } from './MeetingBot.js';
+import { Recording } from './Recording.js';
 import { UnauthorizedError } from './errors/UnauthorizedError.js';
 import { NotFoundError } from './errors/NotFoundError.js';
 import { UnprocessableEntityError } from './errors/UnprocessableEntityError.js';
@@ -18,7 +25,7 @@ export class SkribbyClient {
 
   public async apiRequest<T>(
     endpoint: string,
-    method: 'GET' | 'POST' | 'DELETE' = 'GET',
+    method: 'GET' | 'POST' | 'PATCH' | 'DELETE' = 'GET',
     body?: Record<string, unknown>,
   ): Promise<T> {
     endpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
@@ -116,5 +123,39 @@ export class SkribbyClient {
     );
     if (!api_data) return null;
     return new MeetingBot(this, api_data);
+  }
+
+  public async updateBot(botId: string, options: UpdateMeetingBotOptions) {
+    const api_data = await this.apiRequest<MeetingBotApiData | null>(
+      `/bot/${botId}`,
+      'PATCH',
+      {
+        ...options,
+        scheduled_start_time: options.scheduled_start_time?.getTime(),
+      },
+    );
+    if (!api_data) return null;
+    return new MeetingBot(this, api_data);
+  }
+
+  public async createRecording(options: CreateRecordingOptions) {
+    const api_data = await this.apiRequest<RecordingApiData | null>(
+      `/recording`,
+      'POST',
+      {
+        ...options,
+      },
+    );
+    if (!api_data) return null;
+    return new Recording(this, api_data);
+  }
+
+  public async getRecordingById(recordingId: string) {
+    const api_data = await this.apiRequest<RecordingApiData>(
+      `/recording/${recordingId}`,
+      'GET',
+    );
+    if (!api_data) return null;
+    return new Recording(this, api_data);
   }
 }

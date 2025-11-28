@@ -12,7 +12,25 @@ export function createRealtimeClient(url: string) {
 export { SkribbyClient, type SkribbyClientOptions } from './SkribbyClient.js';
 export { RealtimeClient } from './RealtimeClient.js';
 export { MeetingBot } from './MeetingBot.js';
+export { Recording } from './Recording.js';
 export { ApiRequestError } from './errors/ApiRequestError.js';
 export { UnauthorizedError } from './errors/UnauthorizedError.js';
 export { NotFoundError } from './errors/NotFoundError.js';
 export { UnprocessableEntityError } from './errors/UnprocessableEntityError.js';
+
+// Type exports
+export type {
+  BotService,
+  BotStatus,
+  TranscriptionModel,
+  CreateMeetingBotOptions,
+  UpdateMeetingBotOptions,
+  MeetingBotApiData,
+  MeetingBotData,
+  RecordingStatus,
+  CreateRecordingOptions,
+  RecordingApiData,
+  RecordingData,
+  RealtimeEventMap,
+  RealtimeActionMap,
+} from './types.js';

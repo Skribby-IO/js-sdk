@@ -1,5 +1,9 @@
 import type { SkribbyClient } from './SkribbyClient.js';
-import type { MeetingBotApiData, MeetingBotData } from './types.js';
+import type {
+  MeetingBotApiData,
+  MeetingBotData,
+  UpdateMeetingBotOptions,
+} from './types.js';
 import { RealtimeClient } from './RealtimeClient.js';
 
 export class MeetingBot {
@@ -58,6 +62,19 @@ export class MeetingBot {
 
   public async delete(): Promise<void> {
     await this.client.apiRequest(`/bot/${this.id}`, 'DELETE');
+  }
+
+  public async update(options: UpdateMeetingBotOptions): Promise<void> {
+    const api_data = await this.client.apiRequest<MeetingBotApiData>(
+      `/bot/${this.id}`,
+      'PATCH',
+      {
+        ...options,
+        scheduled_start_time: options.scheduled_start_time?.getTime(),
+      },
+    );
+    if (!api_data) throw new Error(`Bot with ID ${this.id} not found`);
+    this.bot_data = this.parseApiData(api_data);
   }
 
   public async refresh() {

@@ -3,6 +3,7 @@ node_modules/
 
 # Build files
 dist/
+*.tgz
 
 # IDE and Editor specific files
 .idea/

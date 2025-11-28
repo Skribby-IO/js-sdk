@@ -14,13 +14,17 @@ export class Recording {
     if (api_data.created_at) {
       api_data.created_at = new Date(api_data.created_at);
     }
-    if (api_data.finished_at) {
-      api_data.finished_at = new Date(api_data.finished_at);
-    }
     if (api_data.recording_available_until) {
       api_data.recording_available_until = new Date(
         api_data.recording_available_until,
       );
+    }
+    if (api_data.events) {
+      api_data.events.forEach((event: any) => {
+        if (event.created_at) {
+          event.created_at = new Date(event.created_at);
+        }
+      });
     }
 
     return api_data;
@@ -47,4 +51,3 @@ export class Recording {
     this.recording_data = this.parseApiData(api_data);
   }
 }
-

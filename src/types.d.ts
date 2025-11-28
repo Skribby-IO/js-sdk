@@ -19,17 +19,22 @@ export type TranscriptionModel =
   | 'whisper'
   | 'assembly-ai-realtime'
   | 'deepgram'
+  | 'deepgram-v3'
   | 'assembly-ai'
   | 'speechmatics'
   | 'rev-ai'
   | 'elevenlabs'
   | 'deepgram-realtime'
+  | 'deepgram-realtime-v3'
   | 'speechmatics-realtime'
+  | 'soniox'
+  | 'soniox-realtime'
   | 'gladia'
   | 'gladia-realtime';
 
 export type CreateMeetingBotOptions = {
   transcription_model: TranscriptionModel;
+  transcription_credentials?: string; // UUID for BYOK (bring your own key)
   service: BotService;
   meeting_url: string;
   bot_name: string;
@@ -45,9 +50,10 @@ export type CreateMeetingBotOptions = {
   initial_chat_message?: string;
   custom_vocabulary?: string[];
   stop_options?: {
-    time_limit?: number; // in minutes
-    last_person_detection?: number; // in minutes
-    silence_detection?: number; // in minutes
+    time_limit?: number; // in minutes (max 240)
+    waiting_room_timeout?: number; // in minutes (1-60, default 10)
+    last_person_detection?: number; // in minutes (0-60, 0 disables)
+    silence_detection?: number; // in minutes (0-60, 0 disables)
   };
   authentication?: {
     account_id?: string;
@@ -70,11 +76,13 @@ export type UpdateMeetingBotOptions = {
   profanity_filter?: boolean;
   initial_chat_message?: string;
   transcription_model?: TranscriptionModel;
+  transcription_credentials?: string; // UUID for BYOK (bring your own key)
   custom_vocabulary?: string[];
   stop_options?: {
-    time_limit?: number; // in minutes
-    last_person_detection?: number; // in minutes
-    silence_detection?: number; // in minutes
+    time_limit?: number; // in minutes (max 240)
+    waiting_room_timeout?: number; // in minutes (1-60, default 10)
+    last_person_detection?: number; // in minutes (0-60, 0 disables)
+    silence_detection?: number; // in minutes (0-60, 0 disables)
   };
   authentication?: {
     account_id?: string;
@@ -83,12 +91,59 @@ export type UpdateMeetingBotOptions = {
   };
 };
 
+export type StopOptions = {
+  time_limit?: number;
+  waiting_room_timeout?: number;
+  last_person_detection?: number;
+  silence_detection?: number;
+};
+
+export type TranscriptSegment = {
+  start?: number;
+  end?: number;
+  speaker?: number;
+  speaker_name?: null | string;
+  potential_speaker_names?:
+    | null
+    | {
+        name: string;
+        confidence: number;
+      }[];
+  confidence?: number;
+  transcript: string;
+  utterances?: {
+    start: number;
+    end: number;
+    speaker: number;
+    confidence: number;
+    transcript: string;
+    words: {
+      start: number;
+      end: number;
+      speaker: number;
+      confidence: number;
+      word: string;
+    }[];
+  };
+};
+
+export type Participant = {
+  name: string;
+  avatar: null | string;
+  first_seen_at: null | string;
+  events?: {
+    type: 'started-speaking' | 'stopped-speaking';
+    timestamp: number;
+  }[];
+};
+
 export type MeetingBotApiData = {
   id: string;
   status: BotStatus;
   service: BotService;
   scheduled_for: null | string;
-  time_limit: null | number;
+  time_limit: null | number; // deprecated
+  stop_options?: StopOptions;
   bot_name: string;
   bot_avatar: null | string;
   meeting_url: string;
@@ -102,39 +157,11 @@ export type MeetingBotApiData = {
   detected_lang: null | string;
   transcription_model: TranscriptionModel;
   profanity_filter: boolean;
+  custom_vocabulary?: string[];
   created_at: null | string;
   finished_at: null | string;
-  transcript: {
-    start?: number;
-    end?: number;
-    speaker?: number;
-    speaker_name?: null | string;
-    confidence?: number;
-    transcript: string;
-    utterances?: {
-      start: number;
-      end: number;
-      speaker: number;
-      confidence: number;
-      transcript: string;
-      words: {
-        start: number;
-        end: number;
-        speaker: number;
-        confidence: number;
-        word: string;
-      }[];
-    };
-  }[];
-  participants: {
-    name: string;
-    avatar: null | string;
-    first_seen_at: null | string;
-    events?: {
-      type: 'started-speaking' | 'stopped-speaking';
-      timestamp: number;
-    }[];
-  }[];
+  transcript: TranscriptSegment[];
+  participants: Participant[];
   events: ((StatusUpdateEvent | ChatMessageEvent) & {
     created_at: null | string;
   })[];
@@ -145,11 +172,12 @@ export type MeetingBotData = MeetingBotApiData & {
   scheduled_for: Date | null;
   finished_at: Date | null;
   recording_available_until: Date | null;
-  participants: (MeetingBotApiData['participants'][0] & {
+  participants: (Participant & {
     first_seen_at: Date | null;
-    events?: (MeetingBotApiData['participants'][0]['events'][0] & {
+    events?: {
+      type: 'started-speaking' | 'stopped-speaking';
       timestamp: Date | null;
-    })[];
+    }[];
   })[];
   events: (MeetingBotApiData['events'][0] & {
     created_at: Date | null;
@@ -215,70 +243,58 @@ export type RealtimeActionMap = {
 
 // Recording Types
 
-export type RecordingStatus =
-  | 'pending'
-  | 'processing'
-  | 'transcribing'
-  | 'completed'
-  | 'failed';
+export type RecordingStatus = 'transcribing' | 'finished' | 'failed';
 
 export type CreateRecordingOptions =
   | {
       // Option 1: Upload via URL
       recording_url: string;
       transcription_model: TranscriptionModel;
+      transcription_credentials?: string; // UUID for BYOK
       lang?: string;
       profanity_filter?: boolean;
       custom_vocabulary?: string[];
       webhook_url?: string;
+      store_recording_for_1_year?: boolean;
     }
   | {
       // Option 2: Re-transcribe from meeting bot
       meeting_bot_id: string;
       transcription_model?: TranscriptionModel;
+      transcription_credentials?: string; // UUID for BYOK
       lang?: string;
       profanity_filter?: boolean;
       custom_vocabulary?: string[];
       webhook_url?: string;
+      store_recording_for_1_year?: boolean;
     };
 
 export type RecordingApiData = {
   id: string;
   status: RecordingStatus;
+  webhook_url: null | string;
   recording_url: null | string;
   recording_available_until: null | string;
   transcription_model: TranscriptionModel;
   lang: null | string;
   detected_lang: null | string;
   profanity_filter: boolean;
+  custom_vocabulary?: string[];
   created_at: null | string;
-  finished_at: null | string;
-  transcript: {
-    start?: number;
-    end?: number;
-    speaker?: number;
-    speaker_name?: null | string;
-    confidence?: number;
-    transcript: string;
-    utterances?: {
-      start: number;
-      end: number;
-      speaker: number;
-      confidence: number;
-      transcript: string;
-      words: {
-        start: number;
-        end: number;
-        speaker: number;
-        confidence: number;
-        word: string;
-      }[];
-    };
+  transcript: TranscriptSegment[];
+  events: {
+    event: string;
+    data: Record<string, unknown>;
+    created_at: null | string;
   }[];
 };
 
 export type RecordingData = RecordingApiData & {
   created_at: Date | null;
-  finished_at: Date | null;
   recording_available_until: Date | null;
+  events: {
+    event: string;
+    data: Record<string, unknown>;
+    created_at: Date | null;
+  }[];
 };

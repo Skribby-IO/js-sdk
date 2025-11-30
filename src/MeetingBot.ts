@@ -92,19 +92,18 @@ export class MeetingBot {
     });
   }
 
-  public getRealtimeClient() {
-    if (!this.bot_data.transcription_model.includes('realtime')) {
-      throw new Error(
-        `Realtime client is not available for bot with ID ${this.id}. This bot does not use a realtime transcription model.`,
-      );
-    }
-
+  public getRealtimeClient(without_audio: boolean = false) {
     if (!this.bot_data.websocket_url) {
       throw new Error(
-        `Realtime client is not available for bot with ID ${this.id}. Websocket server no longer available.`,
+        `Realtime client is not available for bot with ID ${this.id}.`,
       );
     }
 
-    return new RealtimeClient(this.bot_data.websocket_url);
+    return new RealtimeClient(
+      this.bot_data.websocket_url,
+      without_audio
+        ? undefined
+        : (this.bot_data.websocket_audio_url ?? undefined),
+    );
   }
 }

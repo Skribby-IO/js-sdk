@@ -30,7 +30,8 @@ export type TranscriptionModel =
   | 'soniox'
   | 'soniox-realtime'
   | 'gladia'
-  | 'gladia-realtime';
+  | 'gladia-realtime'
+  | 'salad';
 
 export type CreateMeetingBotOptions = {
   transcription_model: TranscriptionModel;
@@ -49,6 +50,7 @@ export type CreateMeetingBotOptions = {
   profanity_filter?: boolean;
   initial_chat_message?: string;
   custom_vocabulary?: string[];
+  realtime_audio?: boolean;
   stop_options?: {
     time_limit?: number; // in minutes (max 240)
     waiting_room_timeout?: number; // in minutes (1-60, default 10)
@@ -152,6 +154,7 @@ export type MeetingBotApiData = {
   recording_available_until: null | string;
   websocket_url: null | string;
   websocket_read_only_url: null | string;
+  websocket_audio_url: null | string;
   video: boolean;
   lang: null | string;
   detected_lang: null | string;
@@ -232,6 +235,7 @@ export type RealtimeEventMap = {
   error: {
     message: string;
   };
+  audio: Buffer; // 16-bit PCM at 16kHz sample rate
 };
 
 export type RealtimeActionMap = {

@@ -170,6 +170,11 @@ realtimeClient.on('participant-tracked', (data) => {
   console.log(`Participant joined: ${data.participantName}`);
 });
 
+// Listen for status updates
+realtimeClient.on('status-update', (data) => {
+  console.log(`Bot status changed: ${data.old_status} -> ${data.new_status}`);
+});
+
 // Send actions
 realtimeClient.send('chat-message', { content: 'Hello!' });
 realtimeClient.send('stop'); // Stop the bot

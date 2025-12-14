@@ -223,6 +223,10 @@ export type RealtimeEventMap = {
     participantId: string;
     participantName: string;
   };
+  'status-update': {
+    old_status: BotStatus;
+    new_status: BotStatus;
+  };
   'started-speaking': {
     participantId: string;
     participantName: string;

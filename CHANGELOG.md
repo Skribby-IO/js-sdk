@@ -1,5 +1,11 @@
 # sdk
 
+## 0.3.1
+
+### Patch Changes
+
+- Patch release to republish latest realtime audio websocket support.
+
 ## 0.3.0
 
 ### Minor Changes

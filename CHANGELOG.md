@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- Patch release to republish latest realtime audio websocket support.
+- Add types for status-update event and update documentation.
 
 ## 0.3.0
 

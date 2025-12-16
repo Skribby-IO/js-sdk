@@ -27,7 +27,7 @@ export type StopReason =
   | 'LAST_PERSON_DETECTED'
   | 'SILENCE_DETECTION_TRIGGERED'
   | 'KICKED';
-  // Note: 'MANUALLY_STOPPED' can appear for both 'not_admitted' and 'finished' statuses
+// Note: 'MANUALLY_STOPPED' can appear for both 'not_admitted' and 'finished' statuses
 
 export type TranscriptionModel =
   | 'none'

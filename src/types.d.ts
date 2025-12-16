@@ -247,6 +247,7 @@ export type RealtimeEventMap = {
   'status-update': {
     old_status: BotStatus;
     new_status: BotStatus;
+    stop_reason?: StopReason;
   };
   'started-speaking': {
     participantId: string;

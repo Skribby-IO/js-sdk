@@ -1,5 +1,11 @@
 # sdk
 
+## 0.3.3
+
+### Patch Changes
+
+- e121b31: Allow `stop_reason` to be provided on the realtime `status-update` event payload (optional field).
+
 ## 0.3.2
 
 ### Patch Changes

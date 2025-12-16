@@ -1,5 +1,12 @@
 # sdk
 
+## 0.3.2
+
+### Patch Changes
+
+- - Add `RealtimeClient.transcript`, an internal transcript buffer that is seeded on connect and appended to on each `ts` event so users can read the full transcription at any time.
+  - Improve realtime typings by adding a shared `RealtimeTranscriptSegment` type and typing the initial transcript snapshot event payload.
+
 ## 0.3.1
 
 ### Patch Changes

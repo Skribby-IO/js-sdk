@@ -1,5 +1,9 @@
 import WebSocket from 'ws';
-import type { RealtimeActionMap, RealtimeEventMap } from './types.js';
+import type {
+  RealtimeActionMap,
+  RealtimeEventMap,
+  RealtimeTranscriptSegment,
+} from './types.js';
 export class RealtimeClient {
   private readonly url: string;
   private readonly audioUrl: string | undefined;
@@ -7,6 +11,7 @@ export class RealtimeClient {
   private audioWs: WebSocket | null = null;
   private ws_connected: boolean = false;
   private audio_ws_connected: boolean = false;
+  private transcriptSegments: RealtimeTranscriptSegment[] = [];
   private listeners: {
     [K in keyof RealtimeEventMap]?: Array<(data: RealtimeEventMap[K]) => void>;
   } = {};
@@ -22,6 +27,11 @@ export class RealtimeClient {
 
   public get audioConnected(): boolean {
     return this.audio_ws_connected;
+  }
+
+  public get transcript(): ReadonlyArray<RealtimeTranscriptSegment> {
+    // Return a copy so external callers can't mutate our internal buffer.
+    return [...this.transcriptSegments];
   }
 
   public on<K extends keyof RealtimeEventMap>(
@@ -47,6 +57,9 @@ export class RealtimeClient {
   }
 
   public async connect(): Promise<void> {
+    // Reset local transcript buffer on (re)connect.
+    this.transcriptSegments = [];
+
     const mainConnection = new Promise<void>((resolve, reject) => {
       this.ws = new WebSocket(this.url);
 
@@ -64,6 +77,19 @@ export class RealtimeClient {
 
           const eventName = json.type as keyof RealtimeEventMap;
           const eventData = json.data as RealtimeEventMap[typeof eventName];
+
+          // Maintain internal transcript buffer (even if user doesn't listen).
+          if (eventName === 'connected') {
+            const transcripts = (eventData as RealtimeEventMap['connected'])
+              ?.transcripts;
+            if (Array.isArray(transcripts)) {
+              this.transcriptSegments = [...transcripts];
+            }
+          }
+          if (eventName === 'ts') {
+            this.transcriptSegments.push(eventData as RealtimeEventMap['ts']);
+          }
+
           if (this.listeners[eventName]) {
             this.listeners[eventName]!.forEach((callback) =>
               (callback as any)(eventData),

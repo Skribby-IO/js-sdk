@@ -28,8 +28,18 @@ const client = createClient({
   // If the chosen transcription model is real-time
   const realtimeClient = bot.getRealtimeClient();
 
+  // When you connect, you'll instantly receive a "connected" event that contains
+  // all transcripts generated up to the point of connection.
+  realtimeClient.on('connected', (data) => {
+    console.log(`Initial transcripts received: ${data.transcripts.length}`);
+  });
+
   realtimeClient.on('ts', (data) => {
     console.log(`${data.speaker_name} said: ${data.transcript}`);
+
+    // You can fetch the full transcription at any time:
+    // (Note: returns an array of transcript segments)
+    const fullTranscriptSoFar = realtimeClient.transcript;
 
     if (data.transcript.toLowerCase().includes('hello')) {
       realtimeClient.send('chat-message', {
@@ -160,6 +170,12 @@ realtimeClient.on('ts', (data) => {
   console.log(`${data.speaker_name}: ${data.transcript}`);
 });
 
+// When you connect, you'll instantly receive a "connected" event that contains
+// all transcripts generated up to the point of connection.
+realtimeClient.on('connected', (data) => {
+  console.log(`Initial transcripts received: ${data.transcripts.length}`);
+});
+
 // Listen for chat messages
 realtimeClient.on('chat-message', (data) => {
   console.log(`Chat from ${data.username}: ${data.content}`);
@@ -178,6 +194,10 @@ realtimeClient.on('status-update', (data) => {
 // Send actions
 realtimeClient.send('chat-message', { content: 'Hello!' });
 realtimeClient.send('stop'); // Stop the bot
+
+// You can fetch the full transcription at any time:
+// (Note: returns an array of transcript segments)
+console.log('Full transcript so far:', realtimeClient.transcript);
 
 await realtimeClient.connect();
 ```

@@ -14,6 +14,21 @@ export type BotStatus =
   | 'invalid_credentials'
   | 'failed';
 
+export type StopReason =
+  // Stop reasons for 'not_admitted' status
+  | 'INVALID_MEETING_URL'
+  | 'WAITING_ROOM_TIMEOUT'
+  | 'MANUALLY_STOPPED'
+  | 'CALL_ALREADY_FINISHED'
+  | 'REQUEST_DENIED'
+  | 'HOST_IN_ANOTHER_MEETING'
+  // Stop reasons for 'finished' status
+  | 'MEETING_ENDED'
+  | 'LAST_PERSON_DETECTED'
+  | 'SILENCE_DETECTION_TRIGGERED'
+  | 'KICKED';
+  // Note: 'MANUALLY_STOPPED' can appear for both 'not_admitted' and 'finished' statuses
+
 export type TranscriptionModel =
   | 'none'
   | 'whisper'
@@ -163,6 +178,7 @@ export type MeetingBotApiData = {
   custom_vocabulary?: string[];
   created_at: null | string;
   finished_at: null | string;
+  stop_reason?: StopReason; // Present when status is 'finished' or 'not_admitted'
   transcript: TranscriptSegment[];
   participants: Participant[];
   events: ((StatusUpdateEvent | ChatMessageEvent) & {
@@ -203,17 +219,22 @@ export type ChatMessageEvent = {
   };
 };
 
+export type RealtimeTranscriptSegment = {
+  transcript: string;
+  start: number;
+  end: number;
+  speaker: number;
+  speaker_name: string | null;
+};
+
 export type RealtimeEventMap = {
   raw: any;
   ping: undefined;
-  start: undefined;
-  ts: {
-    transcript: string;
-    start: number;
-    end: number;
-    speaker: number;
-    speaker_name: string | null;
+  connected: {
+    transcripts: RealtimeTranscriptSegment[];
   };
+  start: undefined;
+  ts: RealtimeTranscriptSegment;
   'chat-message': {
     username: string;
     content: string;

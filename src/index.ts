@@ -22,6 +22,7 @@ export { UnprocessableEntityError } from './errors/UnprocessableEntityError.js';
 export type {
   BotService,
   BotStatus,
+  StopReason,
   TranscriptionModel,
   StopOptions,
   TranscriptSegment,

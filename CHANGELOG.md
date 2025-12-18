@@ -1,5 +1,11 @@
 # sdk
 
+## 0.3.4
+
+### Patch Changes
+
+- fix: update scheduled_start_time handling to use Unix timestamp format in MeetingBot and SkribbyClient
+
 ## 0.3.3
 
 ### Patch Changes

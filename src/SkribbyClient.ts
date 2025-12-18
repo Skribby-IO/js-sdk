@@ -103,7 +103,9 @@ export class SkribbyClient {
       'POST',
       {
         ...options,
-        scheduled_start_time: options.scheduled_start_time?.getTime(),
+        scheduled_start_time: options.scheduled_start_time
+          ? Math.floor(options.scheduled_start_time.getTime() / 1000)
+          : undefined,
       },
     );
     if (!api_data) return null;
@@ -118,7 +120,9 @@ export class SkribbyClient {
       'POST',
       {
         ...options,
-        scheduled_start_time: options.scheduled_start_time?.getTime(),
+        scheduled_start_time: options.scheduled_start_time
+          ? Math.floor(options.scheduled_start_time.getTime() / 1000)
+          : undefined,
       },
     );
     if (!api_data) return null;
@@ -131,7 +135,9 @@ export class SkribbyClient {
       'PATCH',
       {
         ...options,
-        scheduled_start_time: options.scheduled_start_time?.getTime(),
+        scheduled_start_time: options.scheduled_start_time
+          ? Math.floor(options.scheduled_start_time.getTime() / 1000)
+          : undefined,
       },
     );
     if (!api_data) return null;

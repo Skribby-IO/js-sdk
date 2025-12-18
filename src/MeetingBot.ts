@@ -70,7 +70,9 @@ export class MeetingBot {
       'PATCH',
       {
         ...options,
-        scheduled_start_time: options.scheduled_start_time?.getTime(),
+        scheduled_start_time: options.scheduled_start_time
+          ? Math.floor(options.scheduled_start_time.getTime() / 1000)
+          : undefined,
       },
     );
     if (!api_data) throw new Error(`Bot with ID ${this.id} not found`);

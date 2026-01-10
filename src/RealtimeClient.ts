@@ -56,6 +56,14 @@ export class RealtimeClient {
     );
   }
 
+  /**
+   * Change the bot's avatar during a realtime session.
+   * @param avatarUrl - URL of the new avatar image
+   */
+  public changeAvatar(avatarUrl: string): void {
+    this.send('change-avatar', { avatar_url: avatarUrl });
+  }
+
   public async connect(): Promise<void> {
     // Reset local transcript buffer on (re)connect.
     this.transcriptSegments = [];

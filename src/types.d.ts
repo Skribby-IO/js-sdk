@@ -268,9 +268,6 @@ export type RealtimeActionMap = {
   'chat-message': {
     content: string;
   };
-  'change-avatar': {
-    avatar_url: string;
-  };
   stop: undefined;
 };
 

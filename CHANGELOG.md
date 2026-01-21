@@ -1,5 +1,15 @@
 # sdk
 
+## 0.4.0
+
+### Minor Changes
+
+- 9e86f54: feat: add custom_metadata support for MeetingBot
+
+### Patch Changes
+
+- da5f911: feat: add change-avatar realtime action support
+
 ## 0.3.4
 
 ### Patch Changes

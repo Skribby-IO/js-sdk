@@ -65,6 +65,7 @@ export type CreateMeetingBotOptions = {
   profanity_filter?: boolean;
   initial_chat_message?: string;
   custom_vocabulary?: string[];
+  custom_metadata?: Record<string, string>; // max 50 keys, values up to 500 chars
   realtime_audio?: boolean;
   stop_options?: {
     time_limit?: number; // in minutes (max 240)
@@ -95,6 +96,7 @@ export type UpdateMeetingBotOptions = {
   transcription_model?: TranscriptionModel;
   transcription_credentials?: string; // UUID for BYOK (bring your own key)
   custom_vocabulary?: string[];
+  custom_metadata?: Record<string, string> | null; // max 50 keys, values up to 500 chars; null clears metadata
   stop_options?: {
     time_limit?: number; // in minutes (max 240)
     waiting_room_timeout?: number; // in minutes (1-60, default 10)
@@ -176,6 +178,7 @@ export type MeetingBotApiData = {
   transcription_model: TranscriptionModel;
   profanity_filter: boolean;
   custom_vocabulary?: string[];
+  custom_metadata: Record<string, string>; // empty object when unset
   created_at: null | string;
   finished_at: null | string;
   stop_reason?: StopReason; // Present when status is 'finished' or 'not_admitted'
@@ -191,6 +194,7 @@ export type MeetingBotData = MeetingBotApiData & {
   scheduled_for: Date | null;
   finished_at: Date | null;
   recording_available_until: Date | null;
+  custom_metadata: Record<string, string>;
   participants: (Participant & {
     first_seen_at: Date | null;
     events?: {

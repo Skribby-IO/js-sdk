@@ -1,5 +1,11 @@
 # sdk
 
+## 0.4.1
+
+### Patch Changes
+
+- Add `elevenlabs-realtime-v2` transcription model.
+
 ## 0.4.0
 
 ### Minor Changes

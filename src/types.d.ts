@@ -46,6 +46,7 @@ export type TranscriptionModel =
   | 'soniox-realtime'
   | 'gladia'
   | 'gladia-realtime'
+  | 'elevenlabs-realtime-v2'
   | 'salad';
 
 export type CreateMeetingBotOptions = {

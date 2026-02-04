@@ -219,6 +219,8 @@ export type StatusUpdateEvent = {
 export type ChatMessageEvent = {
   event: 'chat_message';
   data: {
+    id?: string;
+    parent_id?: string | null;
     content: string;
     username: string;
   };
@@ -241,6 +243,8 @@ export type RealtimeEventMap = {
   start: undefined;
   ts: RealtimeTranscriptSegment;
   'chat-message': {
+    id?: string;
+    parent_id?: string | null;
     username: string;
     content: string;
     user_avatar: string | null;
@@ -272,6 +276,7 @@ export type RealtimeEventMap = {
 export type RealtimeActionMap = {
   'chat-message': {
     content: string;
+    reply_to_message?: string | null;
   };
   'change-avatar': {
     avatar_url: string;

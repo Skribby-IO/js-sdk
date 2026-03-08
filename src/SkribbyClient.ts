@@ -1,9 +1,11 @@
 import type {
   CreateMeetingBotOptions,
   MeetingBotApiData,
+  MeetingBotPricingData,
   UpdateMeetingBotOptions,
   CreateRecordingOptions,
   RecordingApiData,
+  SkribbyRegion,
 } from './types.js';
 import { MeetingBot } from './MeetingBot.js';
 import { Recording } from './Recording.js';
@@ -14,13 +16,30 @@ import { ApiRequestError } from './errors/ApiRequestError.js';
 
 export type SkribbyClientOptions = {
   api_key: string;
+  region?: SkribbyRegion;
+  base_url?: string;
 };
+
+const SKRIBBY_CLIENT = 'js-sdk';
+const SKRIBBY_CLIENT_VERSION = '0.5.0';
+
 export class SkribbyClient {
-  private readonly api_url: string = 'https://platform.skribby.io/api/v1';
+  private readonly api_url: string;
   private readonly api_key: string;
 
-  public constructor({ api_key }: SkribbyClientOptions) {
+  public constructor({ api_key, region, base_url }: SkribbyClientOptions) {
     this.api_key = api_key;
+    this.api_url = base_url ?? this.getApiUrlForRegion(region);
+  }
+
+  private getApiUrlForRegion(region?: SkribbyRegion): string {
+    switch (region) {
+      case 'jp':
+        return 'https://platform-jp.skribby.io/api/v1';
+      case 'eu':
+      default:
+        return 'https://platform.skribby.io/api/v1';
+    }
   }
 
   public async apiRequest<T>(
@@ -34,6 +53,7 @@ export class SkribbyClient {
       'Content-Type': 'application/json',
       Accept: 'application/json',
       Authorization: `Bearer ${this.api_key}`,
+      'X-Skribby-Client': `${SKRIBBY_CLIENT}/${SKRIBBY_CLIENT_VERSION}`,
     };
     const options: RequestInit = {
       method,
@@ -97,12 +117,21 @@ export class SkribbyClient {
     return new MeetingBot(this, api_data);
   }
 
+  public async getBotPricing(botId: string): Promise<MeetingBotPricingData> {
+    return this.apiRequest<MeetingBotPricingData>(
+      `/bot/${botId}/pricing`,
+      'GET',
+    );
+  }
+
   public async createBot(options: CreateMeetingBotOptions) {
     const api_data = await this.apiRequest<MeetingBotApiData | null>(
       `/bot`,
       'POST',
       {
         ...options,
+        client: SKRIBBY_CLIENT,
+        client_version: SKRIBBY_CLIENT_VERSION,
         scheduled_start_time: options.scheduled_start_time
           ? Math.floor(options.scheduled_start_time.getTime() / 1000)
           : undefined,
@@ -120,6 +149,8 @@ export class SkribbyClient {
       'POST',
       {
         ...options,
+        client: SKRIBBY_CLIENT,
+        client_version: SKRIBBY_CLIENT_VERSION,
         scheduled_start_time: options.scheduled_start_time
           ? Math.floor(options.scheduled_start_time.getTime() / 1000)
           : undefined,

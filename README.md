@@ -17,6 +17,16 @@ const client = createClient({
   api_key: 'SKRIBBY_API_KEY',
 });
 
+const jpClient = createClient({
+  api_key: 'SKRIBBY_API_KEY',
+  region: 'jp',
+});
+
+const customClient = createClient({
+  api_key: 'SKRIBBY_API_KEY',
+  base_url: 'https://platform-jp.skribby.io/api/v1',
+});
+
 (async () => {
   const bot = await client.createBot({
     bot_name: 'My Meeting Bot',
@@ -73,6 +83,23 @@ const bot = await client.createBot({
 
 ```ts
 const bot = await client.getBotById('bot_123');
+```
+
+### Get Bot Pricing
+
+```ts
+const pricing = await client.getBotPricing('bot_123');
+
+console.log(pricing.currency); // USD
+console.log(pricing.total.rate_per_hour); // e.g. 0.92
+console.log(pricing.total.amount); // null while in progress, number when finished
+
+// If you already have a MeetingBot instance:
+const bot = await client.getBotById('bot_123');
+if (bot) {
+  const pricingFromBot = await bot.getPricing();
+  console.log(pricingFromBot.total.amount);
+}
 ```
 
 ### Get All Scheduled Bots

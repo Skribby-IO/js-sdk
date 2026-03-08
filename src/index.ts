@@ -21,6 +21,7 @@ export { UnprocessableEntityError } from './errors/UnprocessableEntityError.js';
 // Type exports
 export type {
   BotService,
+  SkribbyRegion,
   BotStatus,
   StopReason,
   TranscriptionModel,
@@ -31,6 +32,11 @@ export type {
   UpdateMeetingBotOptions,
   MeetingBotApiData,
   MeetingBotData,
+  MeetingBotPricingBase,
+  MeetingBotPricingTranscription,
+  MeetingBotPricingAddon,
+  MeetingBotPricingTotal,
+  MeetingBotPricingData,
   StatusUpdateEvent,
   ChatMessageEvent,
   RecordingStatus,

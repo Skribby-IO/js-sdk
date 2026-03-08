@@ -2,6 +2,7 @@ import type { SkribbyClient } from './SkribbyClient.js';
 import type {
   MeetingBotApiData,
   MeetingBotData,
+  MeetingBotPricingData,
   UpdateMeetingBotOptions,
 } from './types.js';
 import { RealtimeClient } from './RealtimeClient.js';
@@ -92,6 +93,13 @@ export class MeetingBot {
     await this.client.apiRequest(`/bot/${this.id}/chat-message`, 'POST', {
       message,
     });
+  }
+
+  public async getPricing(): Promise<MeetingBotPricingData> {
+    return this.client.apiRequest<MeetingBotPricingData>(
+      `/bot/${this.id}/pricing`,
+      'GET',
+    );
   }
 
   public getRealtimeClient(without_audio: boolean = false) {

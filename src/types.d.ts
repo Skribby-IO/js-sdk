@@ -1,5 +1,7 @@
 export type BotService = 'gmeet' | 'teams' | 'zoom';
 
+export type SkribbyRegion = 'eu' | 'jp';
+
 export type BotStatus =
   | 'scheduled'
   | 'booting'
@@ -206,6 +208,35 @@ export type MeetingBotData = MeetingBotApiData & {
   events: (MeetingBotApiData['events'][0] & {
     created_at: Date | null;
   })[];
+};
+
+export type MeetingBotPricingBase = {
+  rate_per_hour: number;
+};
+
+export type MeetingBotPricingTranscription = {
+  model: TranscriptionModel | (string & {});
+  rate_per_hour: number;
+  byok: boolean;
+};
+
+export type MeetingBotPricingAddon = {
+  name: string;
+  rate_per_hour: number;
+};
+
+export type MeetingBotPricingTotal = {
+  rate_per_hour: number;
+  amount: number | null;
+};
+
+export type MeetingBotPricingData = {
+  id: string;
+  currency: 'USD' | (string & {});
+  base: MeetingBotPricingBase;
+  transcription: MeetingBotPricingTranscription;
+  addons: MeetingBotPricingAddon[];
+  total: MeetingBotPricingTotal;
 };
 
 export type StatusUpdateEvent = {

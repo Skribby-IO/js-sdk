@@ -1,5 +1,14 @@
 # sdk
 
+## 0.5.0
+
+### Minor Changes
+
+- Add support for bot pricing retrieval via the new `/bot/{id}/pricing` endpoint.
+  This release introduces `client.getBotPricing(botId)`, `bot.getPricing()`, and exported pricing response types.
+- Add configurable API base URL support when creating a client.
+  This release introduces typed `region` selection (`eu` or `jp`) and a `base_url` override that takes precedence when provided.
+
 ## 0.4.1
 
 ### Patch Changes

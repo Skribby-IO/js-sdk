@@ -1,6 +1,6 @@
 {
   "name": "@skribby/sdk",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "Typescript SDK for Skribby Meeting Bot API",
   "keywords": [
     "skribby",
@@ -28,7 +28,8 @@
     "format": "prettier --write .",
     "check-format": "prettier --check .",
     "ci": "npm run build && npm run check-format",
-    "prepublishOnly": "npm run ci",
+    "prepublishOnly": "npm run sync:client-version && npm run ci",
+    "sync:client-version": "node ./scripts/sync-client-version.js",
     "local-release": "changeset version && changeset publish"
   },
   "devDependencies": {

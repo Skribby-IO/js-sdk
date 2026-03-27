@@ -1,5 +1,11 @@
 # sdk
 
+## 0.5.1
+
+### Patch Changes
+
+- 264040c: Expand transcription model typings with canonical model keys and update the README examples to use the current model identifiers.
+
 ## 0.5.0
 
 ### Minor Changes

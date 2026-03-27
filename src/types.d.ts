@@ -31,8 +31,31 @@ export type StopReason =
   | 'KICKED';
 // Note: 'MANUALLY_STOPPED' can appear for both 'not_admitted' and 'finished' statuses
 
-export type TranscriptionModel =
+export type TranscriptionModelKey =
   | 'none'
+  | 'openai/whisper-large-v3'
+  | 'soniox/stt-async-v4'
+  | 'soniox/stt-rt-v4'
+  | 'assemblyai/universal-2'
+  | 'assemblyai/universal-streaming'
+  | 'deepgram/nova-2'
+  | 'deepgram/nova-2-realtime'
+  | 'deepgram/nova-3-multilingual'
+  | 'deepgram/nova-3-multilingual-realtime'
+  | 'speechmatics/batch-standard'
+  | 'speechmatics/realtime-standard'
+  | 'revai/reverb-foreign-language'
+  | 'elevenlabs/scribe-v1'
+  | 'elevenlabs/scribe-v2'
+  | 'elevenlabs/scribe-v2-realtime'
+  | 'gladia/async'
+  | 'gladia/realtime'
+  | 'salad/transcription'
+  | 'soniox/latest'
+  | 'soniox/latest-realtime';
+
+export type TranscriptionModel =
+  | TranscriptionModelKey
   | 'whisper'
   | 'assembly-ai-realtime'
   | 'deepgram'
@@ -49,7 +72,9 @@ export type TranscriptionModel =
   | 'gladia'
   | 'gladia-realtime'
   | 'elevenlabs-realtime-v2'
-  | 'salad';
+  | 'elevenlabs-v2'
+  | 'salad'
+  | (string & {});
 
 export type CreateMeetingBotOptions = {
   transcription_model: TranscriptionModel;
@@ -179,6 +204,7 @@ export type MeetingBotApiData = {
   lang: null | string;
   detected_lang: null | string;
   transcription_model: TranscriptionModel;
+  transcription_model_key?: TranscriptionModelKey;
   profanity_filter: boolean;
   custom_vocabulary?: string[];
   custom_metadata: Record<string, string>; // empty object when unset
@@ -216,6 +242,7 @@ export type MeetingBotPricingBase = {
 
 export type MeetingBotPricingTranscription = {
   model: TranscriptionModel | (string & {});
+  model_key?: TranscriptionModelKey;
   rate_per_hour: number;
   byok: boolean;
 };
@@ -350,6 +377,7 @@ export type RecordingApiData = {
   recording_url: null | string;
   recording_available_until: null | string;
   transcription_model: TranscriptionModel;
+  transcription_model_key?: TranscriptionModelKey;
   lang: null | string;
   detected_lang: null | string;
   profanity_filter: boolean;

@@ -32,7 +32,7 @@ const customClient = createClient({
     bot_name: 'My Meeting Bot',
     meeting_url: 'https://meet.google.com/abc-defg-hij',
     service: 'gmeet',
-    transcription_model: 'deepgram-realtime',
+    transcription_model: 'deepgram/nova-2-realtime',
   });
 
   // If the chosen transcription model is real-time
@@ -74,7 +74,7 @@ const bot = await client.createBot({
   bot_name: 'My Meeting Bot',
   meeting_url: 'https://meet.google.com/abc-defg-hij',
   service: 'gmeet',
-  transcription_model: 'whisper',
+  transcription_model: 'openai/whisper-large-v3',
   webhook_url: 'https://your-server.com/webhook', // Optional: receive status updates
 });
 ```
@@ -150,7 +150,7 @@ Upload and transcribe recordings independently of meeting bots.
 ```ts
 const recording = await client.createRecording({
   recording_url: 'https://example.com/meeting-recording.mp4',
-  transcription_model: 'whisper',
+  transcription_model: 'openai/whisper-large-v3',
   lang: 'en',
   webhook_url: 'https://your-server.com/webhook', // Optional
 });
@@ -161,7 +161,7 @@ const recording = await client.createRecording({
 ```ts
 const recording = await client.createRecording({
   meeting_bot_id: 'bot_123',
-  transcription_model: 'deepgram', // Override the original model
+  transcription_model: 'deepgram/nova-2', // Override the original model
 });
 ```
 
@@ -187,7 +187,7 @@ await recording.delete();
 
 ## Real-time Transcription
 
-For bots using real-time transcription models (e.g., `deepgram-realtime`, `assembly-ai-realtime`):
+For bots using real-time transcription models (e.g., `deepgram/nova-2-realtime`, `assemblyai/universal-streaming`):
 
 ```ts
 const realtimeClient = bot.getRealtimeClient();

@@ -33,7 +33,12 @@ export type StopReason =
 
 export type TranscriptionModelKey =
   | 'none'
+  | 'groq/whisper-large-v3-turbo'
+  | 'groq/whisper-large-v3'
+  // Deprecated legacy alias for 'groq/whisper-large-v3-turbo'.
   | 'openai/whisper-large-v3'
+  | 'openai/gpt-4o-mini-transcribe'
+  | 'openai/gpt-4o-transcribe'
   | 'soniox/stt-async-v4'
   | 'soniox/stt-rt-v4'
   | 'assemblyai/universal-2'
@@ -74,6 +79,8 @@ export type TranscriptionModel =
   | 'elevenlabs-realtime-v2'
   | 'elevenlabs-v2'
   | 'salad'
+  | 'gpt-4o-mini-transcribe'
+  | 'gpt-4o-transcribe'
   | (string & {});
 
 export type CreateMeetingBotOptions = {

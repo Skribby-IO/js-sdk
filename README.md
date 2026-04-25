@@ -74,7 +74,7 @@ const bot = await client.createBot({
   bot_name: 'My Meeting Bot',
   meeting_url: 'https://meet.google.com/abc-defg-hij',
   service: 'gmeet',
-  transcription_model: 'openai/whisper-large-v3',
+  transcription_model: 'groq/whisper-large-v3-turbo',
   webhook_url: 'https://your-server.com/webhook', // Optional: receive status updates
 });
 ```
@@ -150,7 +150,7 @@ Upload and transcribe recordings independently of meeting bots.
 ```ts
 const recording = await client.createRecording({
   recording_url: 'https://example.com/meeting-recording.mp4',
-  transcription_model: 'openai/whisper-large-v3',
+  transcription_model: 'groq/whisper-large-v3-turbo',
   lang: 'en',
   webhook_url: 'https://your-server.com/webhook', // Optional
 });

@@ -55,6 +55,7 @@ export type TranscriptionModelKey =
   | 'elevenlabs/scribe-v2-realtime'
   | 'gladia/async'
   | 'gladia/realtime'
+  | 'xai/speech-to-text'
   | 'salad/transcription'
   | 'soniox/latest'
   | 'soniox/latest-realtime';

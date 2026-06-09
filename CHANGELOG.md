@@ -1,5 +1,11 @@
 # sdk
 
+## 0.5.4
+
+### Patch Changes
+
+- Add `stop_options.empty_meeting_timeout` typing for configuring empty-meeting waits separately from `last_person_detection`.
+
 ## 0.5.1
 
 ### Patch Changes

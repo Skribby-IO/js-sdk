@@ -103,12 +103,7 @@ export type CreateMeetingBotOptions = {
   custom_vocabulary?: string[];
   custom_metadata?: Record<string, string>; // max 50 keys, values up to 500 chars
   realtime_audio?: boolean;
-  stop_options?: {
-    time_limit?: number; // in minutes (max 240)
-    waiting_room_timeout?: number; // in minutes (1-60, default 10)
-    last_person_detection?: number; // in minutes (0-60, 0 disables)
-    silence_detection?: number; // in minutes (0-60, 0 disables)
-  };
+  stop_options?: StopOptions;
   authentication?: {
     account_id?: string;
     zoom_zak_token?: string;
@@ -133,12 +128,7 @@ export type UpdateMeetingBotOptions = {
   transcription_credentials?: string; // UUID for BYOK (bring your own key)
   custom_vocabulary?: string[];
   custom_metadata?: Record<string, string> | null; // max 50 keys, values up to 500 chars; null clears metadata
-  stop_options?: {
-    time_limit?: number; // in minutes (max 240)
-    waiting_room_timeout?: number; // in minutes (1-60, default 10)
-    last_person_detection?: number; // in minutes (0-60, 0 disables)
-    silence_detection?: number; // in minutes (0-60, 0 disables)
-  };
+  stop_options?: StopOptions;
   authentication?: {
     account_id?: string;
     zoom_zak_token?: string;
@@ -147,10 +137,11 @@ export type UpdateMeetingBotOptions = {
 };
 
 export type StopOptions = {
-  time_limit?: number;
-  waiting_room_timeout?: number;
-  last_person_detection?: number;
-  silence_detection?: number;
+  time_limit?: number; // in minutes (max 240)
+  waiting_room_timeout?: number; // in minutes (1-60, default 10)
+  empty_meeting_timeout?: number; // in minutes (0-60, default 10, 0 disables)
+  last_person_detection?: number; // in minutes (0-60, default 2, 0 disables)
+  silence_detection?: number; // in minutes (0-60, 0 disables)
 };
 
 export type TranscriptSegment = {

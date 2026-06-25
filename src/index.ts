@@ -37,6 +37,7 @@ export type {
   MeetingBotPricingAddon,
   MeetingBotPricingTotal,
   MeetingBotPricingData,
+  ReservedCapacityData,
   StatusUpdateEvent,
   ChatMessageEvent,
   RecordingStatus,

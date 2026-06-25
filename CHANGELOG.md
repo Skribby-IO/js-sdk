@@ -1,5 +1,12 @@
 # sdk
 
+## 0.5.5
+
+### Patch Changes
+
+- Add typed Reserved Capacity SDK support via `client.getReservedCapacity()` and `client.setReservedCapacity(count)`.
+- Remove Salad transcription model aliases from the exported transcription model typings.
+
 ## 0.5.4
 
 ### Patch Changes

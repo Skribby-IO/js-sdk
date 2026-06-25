@@ -56,7 +56,6 @@ export type TranscriptionModelKey =
   | 'gladia/async'
   | 'gladia/realtime'
   | 'xai/speech-to-text'
-  | 'salad/transcription'
   | 'soniox/latest'
   | 'soniox/latest-realtime';
 
@@ -79,7 +78,6 @@ export type TranscriptionModel =
   | 'gladia-realtime'
   | 'elevenlabs-realtime-v2'
   | 'elevenlabs-v2'
-  | 'salad'
   | 'gpt-4o-mini-transcribe'
   | 'gpt-4o-transcribe'
   | (string & {});
@@ -263,6 +261,11 @@ export type MeetingBotPricingData = {
   transcription: MeetingBotPricingTranscription;
   addons: MeetingBotPricingAddon[];
   total: MeetingBotPricingTotal;
+};
+
+export type ReservedCapacityData = {
+  reserved: number;
+  available: number;
 };
 
 export type StatusUpdateEvent = {

@@ -2,6 +2,7 @@ import type {
   CreateMeetingBotOptions,
   MeetingBotApiData,
   MeetingBotPricingData,
+  ReservedCapacityData,
   UpdateMeetingBotOptions,
   CreateRecordingOptions,
   RecordingApiData,
@@ -21,7 +22,7 @@ export type SkribbyClientOptions = {
 };
 
 const SKRIBBY_CLIENT = 'js-sdk';
-const SKRIBBY_CLIENT_VERSION = '0.5.4';
+const SKRIBBY_CLIENT_VERSION = '0.5.5';
 
 export class SkribbyClient {
   private readonly api_url: string;
@@ -44,7 +45,7 @@ export class SkribbyClient {
 
   public async apiRequest<T>(
     endpoint: string,
-    method: 'GET' | 'POST' | 'PATCH' | 'DELETE' = 'GET',
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
     body?: Record<string, unknown>,
   ): Promise<T> {
     endpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
@@ -122,6 +123,18 @@ export class SkribbyClient {
       `/bot/${botId}/pricing`,
       'GET',
     );
+  }
+
+  public async getReservedCapacity(): Promise<ReservedCapacityData> {
+    return this.apiRequest<ReservedCapacityData>('/reserved-capacity', 'GET');
+  }
+
+  public async setReservedCapacity(
+    count: number,
+  ): Promise<ReservedCapacityData> {
+    return this.apiRequest<ReservedCapacityData>('/reserved-capacity', 'PUT', {
+      count,
+    });
   }
 
   public async createBot(options: CreateMeetingBotOptions) {

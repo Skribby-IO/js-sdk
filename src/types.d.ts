@@ -39,10 +39,15 @@ export type TranscriptionModelKey =
   | 'openai/whisper-large-v3'
   | 'openai/gpt-4o-mini-transcribe'
   | 'openai/gpt-4o-transcribe'
+  | 'openai/gpt-4o-transcribe-diarize'
   | 'soniox/stt-async-v4'
+  | 'soniox/stt-async-v5'
   | 'soniox/stt-rt-v4'
+  | 'soniox/stt-rt-v5'
   | 'assemblyai/universal-2'
+  | 'assemblyai/universal-3-pro'
   | 'assemblyai/universal-streaming'
+  | 'assemblyai/universal-3-pro-streaming'
   | 'deepgram/nova-2'
   | 'deepgram/nova-2-realtime'
   | 'deepgram/nova-3-multilingual'
@@ -55,6 +60,8 @@ export type TranscriptionModelKey =
   | 'elevenlabs/scribe-v2-realtime'
   | 'gladia/async'
   | 'gladia/realtime'
+  | 'mistral/voxtral-mini-2'
+  | 'mistral/voxtral-mini-transcribe-realtime-2602'
   | 'xai/speech-to-text'
   | 'soniox/latest'
   | 'soniox/latest-realtime';
@@ -145,7 +152,7 @@ export type StopOptions = {
 export type TranscriptSegment = {
   start?: number;
   end?: number;
-  speaker?: number;
+  speaker?: number | string;
   speaker_name?: null | string;
   potential_speaker_names?:
     | null

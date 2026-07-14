@@ -1,5 +1,11 @@
 # sdk
 
+## 0.6.0
+
+### Minor Changes
+
+- 4e8f213: Add Google Cloud Chirp 3 and AWS Transcribe batch and real-time model keys to the public TypeScript SDK contract.
+
 ## 0.5.6
 
 ### Patch Changes

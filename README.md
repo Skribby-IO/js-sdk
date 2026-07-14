@@ -322,6 +322,27 @@ for (const participant of bot.data.participants) {
 }
 ```
 
+### Google Cloud Chirp 3 and AWS Transcribe
+
+Use the canonical model key for Google Cloud Speech-to-Text V2 Chirp 3 (`google/chirp-3` or `google/chirp-3-realtime`) or AWS Transcribe (`aws/transcribe` or `aws/transcribe-streaming`). The `-realtime` and `-streaming` keys are real-time models; the other keys are batch models.
+
+```ts
+const batchBot = await client.createBot({
+  bot_name: 'Chirp 3 batch bot',
+  meeting_url: 'https://meet.google.com/abc-defg-hij',
+  service: 'gmeet',
+  transcription_model: 'google/chirp-3',
+});
+
+const realtimeBot = await client.createBot({
+  bot_name: 'AWS streaming bot',
+  meeting_url: 'https://meet.google.com/abc-defg-hij',
+  service: 'gmeet',
+  transcription_model: 'aws/transcribe-streaming',
+});
+```
+
+For realtime bring-your-own credentials (`google/chirp-3-realtime` and `aws/transcribe-streaming` only), pass the existing credential UUID as `transcription_credentials` when creating or updating a bot or recording; batch models use managed credentials. The SDK does not create or update transcription credentials.
 ## Webhooks
 
 When you provide a `webhook_url`, Skribby will POST events to your server:

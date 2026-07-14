@@ -24,6 +24,7 @@ export type {
   SkribbyRegion,
   BotStatus,
   StopReason,
+  TranscriptionModelKey,
   TranscriptionModel,
   StopOptions,
   TranscriptSegment,

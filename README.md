@@ -343,6 +343,7 @@ const realtimeBot = await client.createBot({
 ```
 
 For realtime bring-your-own credentials (`google/chirp-3-realtime` and `aws/transcribe-streaming` only), pass the existing credential UUID as `transcription_credentials` when creating or updating a bot or recording; batch models use managed credentials. The SDK does not create or update transcription credentials.
+
 ## Webhooks
 
 When you provide a `webhook_url`, Skribby will POST events to your server:

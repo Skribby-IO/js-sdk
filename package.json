@@ -25,9 +25,12 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
+    "test": "npm run build && npm run test:types && npm run test:runtime",
+    "test:types": "tsc --project tsconfig.test.json",
+    "test:runtime": "node --test tests/*.test.mjs",
     "format": "prettier --write .",
     "check-format": "prettier --check .",
-    "ci": "npm run build && npm run check-format",
+    "ci": "npm run test && npm run check-format",
     "prepublishOnly": "npm run sync:client-version && npm run ci",
     "sync:client-version": "node ./scripts/sync-client-version.js",
     "local-release": "changeset version && changeset publish"

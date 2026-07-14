@@ -210,7 +210,22 @@ realtimeClient.on('chat-message', (data) => {
 
 // Listen for participant events
 realtimeClient.on('participant-tracked', (data) => {
-  console.log(`Participant joined: ${data.participantName}`);
+  console.log(
+    `Participant detected: ${data.participantName} at ${new Date(data.timestamp).toISOString()}`,
+  );
+});
+
+realtimeClient.on('started-speaking', (data) => {
+  console.log(
+    `${data.participantName} started speaking at ${new Date(data.timestamp).toISOString()}`,
+  );
+});
+
+// Participant state payload timestamps are epoch milliseconds.
+realtimeClient.on('participant-muted', (data) => {
+  console.log(
+    `${data.participantName} muted at ${new Date(data.timestamp).toISOString()}`,
+  );
 });
 
 // Listen for status updates
@@ -227,6 +242,84 @@ realtimeClient.send('stop'); // Stop the bot
 console.log('Full transcript so far:', realtimeClient.transcript);
 
 await realtimeClient.connect();
+```
+
+### Participant state events
+
+Realtime participant state listeners use these event names:
+
+- `participant-left`
+- `participant-rejoined`
+- `participant-muted`
+- `participant-unmuted`
+- `participant-camera-on`
+- `participant-camera-off`
+- `participant-started-screenshare`
+- `participant-stopped-screenshare`
+
+Each listener receives the same typed payload:
+
+```ts
+import type { RealtimeParticipantStateEventName } from '@skribby/sdk';
+
+const participantStateEvents: RealtimeParticipantStateEventName[] = [
+  'participant-left',
+  'participant-rejoined',
+  'participant-muted',
+  'participant-unmuted',
+  'participant-camera-on',
+  'participant-camera-off',
+  'participant-started-screenshare',
+  'participant-stopped-screenshare',
+];
+
+for (const eventName of participantStateEvents) {
+  realtimeClient.on(
+    eventName,
+    ({ participantId, participantName, timestamp }) => {
+      console.log({
+        eventName,
+        participantId,
+        participantName,
+        occurredAt: new Date(timestamp),
+      });
+    },
+  );
+}
+```
+
+The existing `participant-tracked`, `started-speaking`, and `stopped-speaking`
+listeners use the same `participantId`, `participantName`, and epoch-millisecond
+`timestamp` payload. Participant event payloads can also include the typed
+observation metadata `observedVia`, `reliability`, `state`, and `lastSeenAt`.
+
+When participant timelines are requested from the API, their `type` values are
+`started-speaking`, `stopped-speaking`, `left`, `rejoined`, `muted`, `unmuted`,
+`camera-on`, `camera-off`, `started-screenshare`, and `stopped-screenshare`.
+First-seen time remains available separately as `Participant.first_seen_at`.
+`Participant.events` models the raw API response with an epoch-millisecond
+`timestamp`; `bot.data.participants` follows the SDK's parsed data convention and
+exposes event timestamps as `Date` values.
+
+Newly recorded participant records expose their current or final presence state through
+`last_seen_at`, optional `left_at`, `state`, and `presence_intervals`. Raw API
+`first_seen_at` is an ISO date string, while `last_seen_at`, `left_at`, and each
+presence interval timestamp are epoch milliseconds. The corresponding fields on
+`bot.data.participants` are parsed as `Date` values. These additive fields may be
+absent from historical or rolling-version responses:
+
+```ts
+for (const participant of bot.data.participants) {
+  console.log({
+    lastSeenAt: participant.last_seen_at,
+    leftAt: participant.left_at,
+    active: participant.state?.active,
+    microphone: participant.state?.microphone,
+    camera: participant.state?.camera,
+    screenshare: participant.state?.screenshare,
+    presenceIntervals: participant.presence_intervals ?? [],
+  });
+}
 ```
 
 ## Webhooks

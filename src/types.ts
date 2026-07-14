@@ -178,14 +178,71 @@ export type TranscriptSegment = {
   };
 };
 
+export type ParticipantStateEventType =
+  | 'left'
+  | 'rejoined'
+  | 'muted'
+  | 'unmuted'
+  | 'camera-on'
+  | 'camera-off'
+  | 'started-screenshare'
+  | 'stopped-screenshare';
+
+export type ParticipantEventType =
+  | 'started-speaking'
+  | 'stopped-speaking'
+  | ParticipantStateEventType;
+
+export type ParticipantEvent = {
+  type: ParticipantEventType;
+  timestamp: number;
+};
+
+export type ParticipantMicrophoneState = 'muted' | 'unmuted' | 'unknown';
+export type ParticipantCameraState = 'on' | 'off' | 'unknown';
+export type ParticipantScreenshareState = 'sharing' | 'not-sharing' | 'unknown';
+
+export type ParticipantState = {
+  active: boolean;
+  microphone: ParticipantMicrophoneState;
+  camera: ParticipantCameraState;
+  screenshare: ParticipantScreenshareState;
+};
+
+export type ParticipantPresenceInterval = {
+  joined_at: number;
+  left_at?: number;
+};
+
 export type Participant = {
   name: string;
   avatar: null | string;
   first_seen_at: null | string;
-  events?: {
-    type: 'started-speaking' | 'stopped-speaking';
-    timestamp: number;
-  }[];
+  last_seen_at?: number;
+  left_at?: number;
+  state?: ParticipantState;
+  presence_intervals?: ParticipantPresenceInterval[];
+  events?: ParticipantEvent[];
+};
+
+export type ParticipantEventData = Omit<ParticipantEvent, 'timestamp'> & {
+  timestamp: Date | null;
+};
+
+export type ParticipantPresenceIntervalData = {
+  joined_at: Date;
+  left_at?: Date;
+};
+
+export type ParticipantData = Omit<
+  Participant,
+  'first_seen_at' | 'last_seen_at' | 'left_at' | 'presence_intervals' | 'events'
+> & {
+  first_seen_at: Date | null;
+  last_seen_at?: Date;
+  left_at?: Date;
+  presence_intervals?: ParticipantPresenceIntervalData[];
+  events?: ParticipantEventData[];
 };
 
 export type MeetingBotApiData = {
@@ -222,19 +279,13 @@ export type MeetingBotApiData = {
   })[];
 };
 
-export type MeetingBotData = MeetingBotApiData & {
+export type MeetingBotData = Omit<MeetingBotApiData, 'participants'> & {
   created_at: Date | null;
   scheduled_for: Date | null;
   finished_at: Date | null;
   recording_available_until: Date | null;
   custom_metadata: Record<string, string>;
-  participants: (Participant & {
-    first_seen_at: Date | null;
-    events?: {
-      type: 'started-speaking' | 'stopped-speaking';
-      timestamp: Date | null;
-    }[];
-  })[];
+  participants: ParticipantData[];
   events: (MeetingBotApiData['events'][0] & {
     created_at: Date | null;
   })[];
@@ -301,6 +352,34 @@ export type RealtimeTranscriptSegment = {
   speaker_name: string | null;
 };
 
+export type RealtimeParticipantStateEventName =
+  | 'participant-left'
+  | 'participant-rejoined'
+  | 'participant-muted'
+  | 'participant-unmuted'
+  | 'participant-camera-on'
+  | 'participant-camera-off'
+  | 'participant-started-screenshare'
+  | 'participant-stopped-screenshare';
+
+export type RealtimeParticipantEventName =
+  | 'participant-tracked'
+  | 'started-speaking'
+  | 'stopped-speaking'
+  | RealtimeParticipantStateEventName;
+
+export type RealtimeParticipantEvent = {
+  participantId: string;
+  participantName: string;
+  timestamp: number;
+  observedVia?: 'browser-dom';
+  reliability?: 'observed' | 'inferred';
+  state?: ParticipantState;
+  lastSeenAt?: number;
+};
+
+export type RealtimeParticipantStateEvent = RealtimeParticipantEvent;
+
 export type RealtimeEventMap = {
   raw: any;
   ping: undefined;
@@ -316,29 +395,20 @@ export type RealtimeEventMap = {
     content: string;
     user_avatar: string | null;
   };
-  'participant-tracked': {
-    participantId: string;
-    participantName: string;
-  };
+  'participant-tracked': RealtimeParticipantEvent;
   'status-update': {
     old_status: BotStatus;
     new_status: BotStatus;
     stop_reason?: StopReason;
   };
-  'started-speaking': {
-    participantId: string;
-    participantName: string;
-  };
-  'stopped-speaking': {
-    participantId: string;
-    participantName: string;
-  };
+  'started-speaking': RealtimeParticipantEvent;
+  'stopped-speaking': RealtimeParticipantEvent;
   stop: undefined;
   error: {
     message: string;
   };
   audio: Buffer; // 16-bit PCM at 16kHz sample rate
-};
+} & Record<RealtimeParticipantStateEventName, RealtimeParticipantStateEvent>;
 
 export type RealtimeActionMap = {
   'chat-message': {

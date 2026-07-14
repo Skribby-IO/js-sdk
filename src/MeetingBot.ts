@@ -33,12 +33,28 @@ export class MeetingBot {
     }
     if (api_data.participants) {
       api_data.participants.forEach((participant: any) => {
-        if (participant.first_seen_at) {
+        if (participant.first_seen_at != null) {
           participant.first_seen_at = new Date(participant.first_seen_at);
+        }
+        if (participant.last_seen_at != null) {
+          participant.last_seen_at = new Date(participant.last_seen_at);
+        }
+        if (participant.left_at != null) {
+          participant.left_at = new Date(participant.left_at);
+        }
+        if (participant.presence_intervals) {
+          participant.presence_intervals.forEach((interval: any) => {
+            if (interval.joined_at != null) {
+              interval.joined_at = new Date(interval.joined_at);
+            }
+            if (interval.left_at != null) {
+              interval.left_at = new Date(interval.left_at);
+            }
+          });
         }
         if (participant.events) {
           participant.events.forEach((event: any) => {
-            if (event.timestamp) {
+            if (event.timestamp != null) {
               event.timestamp = new Date(event.timestamp);
             }
           });

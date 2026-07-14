@@ -1,5 +1,13 @@
 # sdk
 
+## 0.5.6
+
+### Patch Changes
+
+- Expand the exported transcription model typings with Soniox v5, AssemblyAI Universal-3 Pro, Mistral Voxtral, and OpenAI diarized transcription model keys, including the new realtime variants.
+- Allow string speaker labels in transcript segments.
+- Include the public type declaration module and its Node.js type dependency in the published package.
+
 ## 0.5.5
 
 ### Patch Changes

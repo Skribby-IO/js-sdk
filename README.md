@@ -257,6 +257,11 @@ Realtime participant state listeners use these event names:
 - `participant-started-screenshare`
 - `participant-stopped-screenshare`
 
+Signal availability depends on what the current meeting UI exposes to the browser bot.
+In particular, screenshare transitions are not guaranteed on Zoom, Microsoft Teams, or
+Google Meet; a missing event means the signal was unavailable or unobserved, not that the
+participant did not change state.
+
 Each listener receives the same typed payload:
 
 ```ts

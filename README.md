@@ -249,7 +249,7 @@ const realtimeBot = await client.createBot({
 });
 ```
 
-For bring-your-own credentials, pass the existing credential UUID as `transcription_credentials` when creating or updating a bot or recording. The SDK does not create or update transcription credentials.
+For realtime bring-your-own credentials (`google/chirp-3-realtime` and `aws/transcribe-streaming` only), pass the existing credential UUID as `transcription_credentials` when creating or updating a bot or recording; batch models use managed credentials. The SDK does not create or update transcription credentials.
 
 ## Webhooks
 

@@ -1,5 +1,11 @@
 # sdk
 
+## 0.7.1
+
+### Patch Changes
+
+- 0c7f0c0: Remove the just-released internal participant observation metadata fields from the public realtime event contract.
+
 ## 0.7.0
 
 ### Minor Changes

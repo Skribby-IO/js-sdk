@@ -49,6 +49,8 @@ export type TranscriptionModelKey =
   | 'soniox/stt-rt-v4'
   | 'soniox/stt-rt-v5'
   | 'assemblyai/universal-2'
+  | 'assemblyai/universal-3-5-pro'
+  // Deprecated compatibility alias; the platform routes this to 'assemblyai/universal-3-5-pro'.
   | 'assemblyai/universal-3-pro'
   | 'assemblyai/universal-streaming'
   | 'assemblyai/universal-3-pro-streaming'

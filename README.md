@@ -329,6 +329,10 @@ for (const participant of bot.data.participants) {
 }
 ```
 
+### AssemblyAI Universal-3.5 Pro
+
+Use `assemblyai/universal-3-5-pro` as the canonical AssemblyAI Universal-3.5 Pro model key. Existing integrations may continue sending the deprecated `assemblyai/universal-3-pro` key, which the platform routes to Universal-3.5 Pro. AssemblyAI streaming model identifiers are unchanged.
+
 ### Google Cloud Chirp 3 and AWS Transcribe
 
 Use the canonical model key for Google Cloud Speech-to-Text V2 Chirp 3 (`google/chirp-3` or `google/chirp-3-realtime`) or AWS Transcribe (`aws/transcribe` or `aws/transcribe-streaming`). The `-realtime` and `-streaming` keys are real-time models; the other keys are batch models.

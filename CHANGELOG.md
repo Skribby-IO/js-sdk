@@ -1,5 +1,11 @@
 # sdk
 
+## 0.7.0
+
+### Minor Changes
+
+- 6db09ec: Add typed realtime listeners, participant timeline events, state snapshots, and presence intervals for participant leave, rejoin, mute, camera, and screenshare state changes.
+
 ## 0.6.0
 
 ### Minor Changes

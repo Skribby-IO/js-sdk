@@ -376,8 +376,6 @@ export type RealtimeParticipantEvent = {
   participantId: string;
   participantName: string;
   timestamp: number;
-  observedVia?: 'browser-dom';
-  reliability?: 'observed' | 'inferred';
   state?: ParticipantState;
   lastSeenAt?: number;
 };

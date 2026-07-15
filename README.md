@@ -244,10 +244,13 @@ console.log('Full transcript so far:', realtimeClient.transcript);
 await realtimeClient.connect();
 ```
 
-### Participant state events
+### Participant events
 
-Realtime participant state listeners use these event names:
+Realtime participant listeners use these event names:
 
+- `participant-tracked`
+- `started-speaking`
+- `stopped-speaking`
 - `participant-left`
 - `participant-rejoined`
 - `participant-muted`
@@ -257,17 +260,15 @@ Realtime participant state listeners use these event names:
 - `participant-started-screenshare`
 - `participant-stopped-screenshare`
 
-Signal availability depends on what the current meeting UI exposes to the browser bot.
-In particular, screenshare transitions are not guaranteed on Zoom, Microsoft Teams, or
-Google Meet; a missing event means the signal was unavailable or unobserved, not that the
-participant did not change state.
-
 Each listener receives the same typed payload:
 
 ```ts
-import type { RealtimeParticipantStateEventName } from '@skribby/sdk';
+import type { RealtimeParticipantEventName } from '@skribby/sdk';
 
-const participantStateEvents: RealtimeParticipantStateEventName[] = [
+const participantEvents: RealtimeParticipantEventName[] = [
+  'participant-tracked',
+  'started-speaking',
+  'stopped-speaking',
   'participant-left',
   'participant-rejoined',
   'participant-muted',
@@ -278,25 +279,26 @@ const participantStateEvents: RealtimeParticipantStateEventName[] = [
   'participant-stopped-screenshare',
 ];
 
-for (const eventName of participantStateEvents) {
+for (const eventName of participantEvents) {
   realtimeClient.on(
     eventName,
-    ({ participantId, participantName, timestamp }) => {
+    ({ participantId, participantName, timestamp, state, lastSeenAt }) => {
       console.log({
         eventName,
         participantId,
         participantName,
         occurredAt: new Date(timestamp),
+        state,
+        lastSeenAt: lastSeenAt != null ? new Date(lastSeenAt) : undefined,
       });
     },
   );
 }
 ```
 
-The existing `participant-tracked`, `started-speaking`, and `stopped-speaking`
-listeners use the same `participantId`, `participantName`, and epoch-millisecond
-`timestamp` payload. Participant event payloads can also include the typed
-observation metadata `observedVia`, `reliability`, `state`, and `lastSeenAt`.
+`timestamp` and optional `lastSeenAt` are epoch-millisecond timestamps. The optional
+`state` field contains the participant's latest presence, microphone, camera, and
+screenshare state.
 
 When participant timelines are requested from the API, their `type` values are
 `started-speaking`, `stopped-speaking`, `left`, `rejoined`, `muted`, `unmuted`,

@@ -49,9 +49,6 @@ test('RealtimeClient dispatches every participant event payload', async (t) => {
               participantId: `participant-${index}`,
               participantName: `Participant ${index}`,
               timestamp: 1_752_486_400_000 + index,
-              observedVia: 'browser-dom',
-              reliability:
-                type === 'participant-left' ? 'inferred' : 'observed',
               state: {
                 active: type !== 'participant-left',
                 microphone: 'muted',
@@ -76,8 +73,6 @@ test('RealtimeClient dispatches every participant event payload', async (t) => {
         participantId: `participant-${index}`,
         participantName: `Participant ${index}`,
         timestamp: 1_752_486_400_000 + index,
-        observedVia: 'browser-dom',
-        reliability: eventName === 'participant-left' ? 'inferred' : 'observed',
         state: {
           active: eventName !== 'participant-left',
           microphone: 'muted',

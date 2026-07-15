@@ -129,8 +129,6 @@ const realtimePayload: RealtimeEventMap['participant-started-screenshare'] = {
   participantId: 'participant-123',
   participantName: 'Ada Lovelace',
   timestamp: apiTimelineEvent.timestamp,
-  observedVia: 'browser-dom',
-  reliability: 'observed',
   state: {
     active: true,
     microphone: 'muted',

@@ -97,12 +97,6 @@ test('MeetingBot parses participant timeline epoch milliseconds as Dates', () =>
           first_seen_at: '1970-01-01T00:00:00.000Z',
           last_seen_at: 1_752_486_400_000,
           left_at: 1_752_486_460_000,
-          state: {
-            active: false,
-            microphone: 'muted',
-            camera: 'off',
-            screenshare: 'not-sharing',
-          },
           presence_intervals: [
             {
               joined_at: 0,
@@ -131,12 +125,6 @@ test('MeetingBot parses participant timeline epoch milliseconds as Dates', () =>
     first_seen_at: new Date('1970-01-01T00:00:00.000Z'),
     last_seen_at: new Date(1_752_486_400_000),
     left_at: new Date(1_752_486_460_000),
-    state: {
-      active: false,
-      microphone: 'muted',
-      camera: 'off',
-      screenshare: 'not-sharing',
-    },
     presence_intervals: [
       {
         joined_at: new Date(0),
@@ -153,7 +141,7 @@ test('MeetingBot parses participant timeline epoch milliseconds as Dates', () =>
   });
 });
 
-test('MeetingBot accepts historical participant payloads without state fields', () => {
+test('MeetingBot accepts historical participant payloads without timeline fields', () => {
   const bot = new MeetingBot(
     {},
     {

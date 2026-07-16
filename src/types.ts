@@ -226,7 +226,6 @@ export type Participant = {
   first_seen_at: null | string;
   last_seen_at?: number;
   left_at?: number;
-  state?: ParticipantState;
   presence_intervals?: ParticipantPresenceInterval[];
   events?: ParticipantEvent[];
 };

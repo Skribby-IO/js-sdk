@@ -308,22 +308,18 @@ First-seen time remains available separately as `Participant.first_seen_at`.
 `timestamp`; `bot.data.participants` follows the SDK's parsed data convention and
 exposes event timestamps as `Date` values.
 
-Newly recorded participant records expose their current or final presence state through
-`last_seen_at`, optional `left_at`, `state`, and `presence_intervals`. Raw API
-`first_seen_at` is an ISO date string, while `last_seen_at`, `left_at`, and each
-presence interval timestamp are epoch milliseconds. The corresponding fields on
-`bot.data.participants` are parsed as `Date` values. These additive fields may be
-absent from historical or rolling-version responses:
+Newly recorded participant records expose presence timing through `last_seen_at`,
+optional `left_at`, and `presence_intervals`. Raw API `first_seen_at` is an ISO date
+string, while `last_seen_at`, `left_at`, and each presence interval timestamp are epoch
+milliseconds. The corresponding fields on `bot.data.participants` are parsed as `Date`
+values. These additive fields may be absent from historical or rolling-version
+responses:
 
 ```ts
 for (const participant of bot.data.participants) {
   console.log({
     lastSeenAt: participant.last_seen_at,
     leftAt: participant.left_at,
-    active: participant.state?.active,
-    microphone: participant.state?.microphone,
-    camera: participant.state?.camera,
-    screenshare: participant.state?.screenshare,
     presenceIntervals: participant.presence_intervals ?? [],
   });
 }

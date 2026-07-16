@@ -1,9 +1,11 @@
 import type {
   Participant,
+  ParticipantData,
   ParticipantEvent,
   ParticipantEventType,
   ParticipantPresenceInterval,
   ParticipantPresenceIntervalData,
+  ParticipantState,
   ParticipantStateEventType,
   MeetingBotData,
   RealtimeEventMap,
@@ -91,6 +93,12 @@ type _ParsedTimelineTimestampIsDate = Assert<
 type _RawLastSeenTimestampIsEpochMilliseconds = Assert<
   IsEqual<Participant['last_seen_at'], number | undefined>
 >;
+type _RawParticipantOmitsState = Assert<
+  IsEqual<'state' extends keyof Participant ? true : false, false>
+>;
+type _ParsedParticipantOmitsState = Assert<
+  IsEqual<'state' extends keyof ParticipantData ? true : false, false>
+>;
 type _RawPresenceIntervalMatches = Assert<
   IsEqual<ParticipantPresenceInterval, { joined_at: number; left_at?: number }>
 >;
@@ -109,6 +117,9 @@ type _ParsedParticipantTimestampsAreDates = Assert<
       left_at?: Date;
     }
   >
+>;
+type _RealtimeParticipantStateIsPreserved = Assert<
+  IsEqual<RealtimeParticipantEvent['state'], ParticipantState | undefined>
 >;
 
 const apiTimelineEvent: ParticipantEvent = {

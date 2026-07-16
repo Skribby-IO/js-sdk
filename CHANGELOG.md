@@ -1,5 +1,11 @@
 # sdk
 
+## 0.8.0
+
+### Minor Changes
+
+- 906c3d7: Remove `state` from the post-meeting `Participant` and `ParticipantData` types. Realtime WebSocket participant event state remains available.
+
 ## 0.7.2
 
 ### Patch Changes

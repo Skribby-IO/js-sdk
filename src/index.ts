@@ -22,6 +22,7 @@ export { UnprocessableEntityError } from './errors/UnprocessableEntityError.js';
 export type {
   BotService,
   SkribbyRegion,
+  RecordingStartMode,
   BotStatus,
   StopReason,
   TranscriptionModelKey,
@@ -61,6 +62,8 @@ export type {
   RealtimeParticipantEventName,
   RealtimeParticipantEvent,
   RealtimeParticipantStateEvent,
+  RealtimeParticipant,
+  RealtimeChatMessage,
   RealtimeEventMap,
   RealtimeActionMap,
 } from './types.js';

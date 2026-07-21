@@ -1,9 +1,28 @@
 import WebSocket from 'ws';
 import type {
+  BotStatus,
   RealtimeActionMap,
+  RealtimeChatMessage,
   RealtimeEventMap,
+  RealtimeParticipant,
+  RealtimeParticipantEvent,
   RealtimeTranscriptSegment,
 } from './types.js';
+
+const participantEventNames = new Set<keyof RealtimeEventMap>([
+  'participant-tracked',
+  'started-speaking',
+  'stopped-speaking',
+  'participant-left',
+  'participant-rejoined',
+  'participant-muted',
+  'participant-unmuted',
+  'participant-camera-on',
+  'participant-camera-off',
+  'participant-started-screenshare',
+  'participant-stopped-screenshare',
+]);
+
 export class RealtimeClient {
   private readonly url: string;
   private readonly audioUrl: string | undefined;
@@ -12,6 +31,9 @@ export class RealtimeClient {
   private ws_connected: boolean = false;
   private audio_ws_connected: boolean = false;
   private transcriptSegments: RealtimeTranscriptSegment[] = [];
+  private participantContexts: RealtimeParticipant[] = [];
+  private observedChatMessages: RealtimeChatMessage[] = [];
+  private currentStatus: BotStatus | null = null;
   private listeners: {
     [K in keyof RealtimeEventMap]?: Array<(data: RealtimeEventMap[K]) => void>;
   } = {};
@@ -32,6 +54,21 @@ export class RealtimeClient {
   public get transcript(): ReadonlyArray<RealtimeTranscriptSegment> {
     // Return a copy so external callers can't mutate our internal buffer.
     return [...this.transcriptSegments];
+  }
+
+  public get participants(): ReadonlyArray<RealtimeParticipant> {
+    return this.participantContexts.map((participant) => ({
+      ...participant,
+      state: { ...participant.state },
+    }));
+  }
+
+  public get chatMessages(): ReadonlyArray<RealtimeChatMessage> {
+    return this.observedChatMessages.map((message) => ({ ...message }));
+  }
+
+  public get status(): BotStatus | null {
+    return this.currentStatus;
   }
 
   public on<K extends keyof RealtimeEventMap>(
@@ -64,9 +101,64 @@ export class RealtimeClient {
     this.send('change-avatar', { avatar_url: avatarUrl });
   }
 
-  public async connect(): Promise<void> {
-    // Reset local transcript buffer on (re)connect.
+  /** Start recording for a bot configured with manual recording start. */
+  public startRecording(): void {
+    this.send('start-recording');
+  }
+
+  private resetContext(): void {
     this.transcriptSegments = [];
+    this.participantContexts = [];
+    this.observedChatMessages = [];
+    this.currentStatus = null;
+  }
+
+  private hydrateConnectedContext(
+    context: RealtimeEventMap['connected'],
+  ): void {
+    this.transcriptSegments = Array.isArray(context?.transcripts)
+      ? [...context.transcripts]
+      : [];
+    this.participantContexts = Array.isArray(context?.participants)
+      ? context.participants.map((participant) => ({
+          ...participant,
+          state: { ...participant.state },
+        }))
+      : [];
+    this.observedChatMessages = Array.isArray(context?.chat_messages)
+      ? context.chat_messages.map((message) => ({ ...message }))
+      : [];
+    this.currentStatus = context?.status ?? null;
+  }
+
+  private updateParticipantContext(event: RealtimeParticipantEvent): void {
+    const existingIndex = this.participantContexts.findIndex(
+      (participant) => participant.participantId === event.participantId,
+    );
+
+    if (existingIndex === -1) {
+      if (event.state) {
+        this.participantContexts.push({
+          ...event,
+          state: { ...event.state },
+        });
+      }
+      return;
+    }
+
+    const existing = this.participantContexts[existingIndex];
+    if (!existing) return;
+
+    this.participantContexts[existingIndex] = {
+      ...existing,
+      ...event,
+      state: event.state ? { ...event.state } : existing.state,
+    };
+  }
+
+  public async connect(): Promise<void> {
+    // Reset all locally materialized context on (re)connect.
+    this.resetContext();
 
     const mainConnection = new Promise<void>((resolve, reject) => {
       this.ws = new WebSocket(this.url);
@@ -83,19 +175,30 @@ export class RealtimeClient {
             this.listeners.raw!.forEach((callback) => callback(json));
           }
 
-          const eventName = json.type as keyof RealtimeEventMap;
+          const eventName = (json.type ?? json.event) as
+            | keyof RealtimeEventMap
+            | undefined;
+          if (!eventName) return;
           const eventData = json.data as RealtimeEventMap[typeof eventName];
 
-          // Maintain internal transcript buffer (even if user doesn't listen).
           if (eventName === 'connected') {
-            const transcripts = (eventData as RealtimeEventMap['connected'])
-              ?.transcripts;
-            if (Array.isArray(transcripts)) {
-              this.transcriptSegments = [...transcripts];
-            }
-          }
-          if (eventName === 'ts') {
+            this.hydrateConnectedContext(
+              eventData as RealtimeEventMap['connected'],
+            );
+          } else if (eventName === 'ts') {
             this.transcriptSegments.push(eventData as RealtimeEventMap['ts']);
+          } else if (eventName === 'chat-message') {
+            this.observedChatMessages.push({
+              ...(eventData as RealtimeEventMap['chat-message']),
+            });
+          } else if (eventName === 'status-update') {
+            this.currentStatus = (
+              eventData as RealtimeEventMap['status-update']
+            ).new_status;
+          } else if (participantEventNames.has(eventName)) {
+            this.updateParticipantContext(
+              eventData as RealtimeParticipantEvent,
+            );
           }
 
           if (this.listeners[eventName]) {

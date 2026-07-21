@@ -2,10 +2,13 @@ export type BotService = 'gmeet' | 'teams' | 'zoom';
 
 export type SkribbyRegion = 'eu' | 'jp';
 
+export type RecordingStartMode = 'automatic' | 'manual';
+
 export type BotStatus =
   | 'scheduled'
   | 'booting'
   | 'joining'
+  | 'waiting_to_record'
   | 'recording'
   | 'processing'
   | 'transcribing'
@@ -24,6 +27,7 @@ export type StopReason =
   | 'CALL_ALREADY_FINISHED'
   | 'REQUEST_DENIED'
   | 'HOST_IN_ANOTHER_MEETING'
+  | 'RECORDING_START_TIMEOUT'
   // Stop reasons for 'finished' status
   | 'MEETING_ENDED'
   | 'LAST_PERSON_DETECTED'
@@ -114,6 +118,7 @@ export type CreateMeetingBotOptions = {
   custom_vocabulary?: string[];
   custom_metadata?: Record<string, string>; // max 50 keys, values up to 500 chars
   realtime_audio?: boolean;
+  recording_start_mode?: RecordingStartMode;
   stop_options?: StopOptions;
   authentication?: {
     account_id?: string;
@@ -139,6 +144,7 @@ export type UpdateMeetingBotOptions = {
   transcription_credentials?: string; // UUID for BYOK (bring your own key)
   custom_vocabulary?: string[];
   custom_metadata?: Record<string, string> | null; // max 50 keys, values up to 500 chars; null clears metadata
+  recording_start_mode?: RecordingStartMode;
   stop_options?: StopOptions;
   authentication?: {
     account_id?: string;
@@ -149,6 +155,7 @@ export type UpdateMeetingBotOptions = {
 
 export type StopOptions = {
   time_limit?: number; // in minutes (max 240)
+  recording_start_timeout?: number; // in minutes (1-60, default 15)
   waiting_room_timeout?: number; // in minutes (1-60, default 10)
   empty_meeting_timeout?: number; // in minutes (0-60, default 10, 0 disables)
   last_person_detection?: number; // in minutes (0-60, default 2, 0 disables)
@@ -253,6 +260,7 @@ export type ParticipantData = Omit<
 export type MeetingBotApiData = {
   id: string;
   status: BotStatus;
+  recording_start_mode: RecordingStartMode;
   service: BotService;
   scheduled_for: null | string;
   time_limit: null | number; // deprecated
@@ -383,21 +391,30 @@ export type RealtimeParticipantEvent = {
 
 export type RealtimeParticipantStateEvent = RealtimeParticipantEvent;
 
+export type RealtimeParticipant = Omit<RealtimeParticipantEvent, 'state'> & {
+  state: ParticipantState;
+};
+
+export type RealtimeChatMessage = {
+  id?: string;
+  parent_id?: string | null;
+  username: string;
+  content: string;
+  user_avatar?: string | null;
+};
+
 export type RealtimeEventMap = {
   raw: any;
   ping: undefined;
   connected: {
     transcripts: RealtimeTranscriptSegment[];
+    participants: RealtimeParticipant[];
+    chat_messages: RealtimeChatMessage[];
+    status: BotStatus | null;
   };
   start: undefined;
   ts: RealtimeTranscriptSegment;
-  'chat-message': {
-    id?: string;
-    parent_id?: string | null;
-    username: string;
-    content: string;
-    user_avatar: string | null;
-  };
+  'chat-message': RealtimeChatMessage;
   'participant-tracked': RealtimeParticipantEvent;
   'status-update': {
     old_status: BotStatus;
@@ -406,6 +423,9 @@ export type RealtimeEventMap = {
   };
   'started-speaking': RealtimeParticipantEvent;
   'stopped-speaking': RealtimeParticipantEvent;
+  'recording-started': {
+    started_at: number;
+  };
   stop: undefined;
   error: {
     message: string;
@@ -421,6 +441,7 @@ export type RealtimeActionMap = {
   'change-avatar': {
     avatar_url: string;
   };
+  'start-recording': undefined;
   stop: undefined;
 };
 

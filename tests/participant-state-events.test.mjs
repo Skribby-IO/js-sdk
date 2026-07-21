@@ -65,24 +65,27 @@ test('RealtimeClient dispatches every participant event payload', async (t) => {
 
   await realtimeClient.connect();
 
+  const expectedParticipants = participantEvents.map((eventName, index) => ({
+    participantId: `participant-${index}`,
+    participantName: `Participant ${index}`,
+    timestamp: 1_752_486_400_000 + index,
+    state: {
+      active: eventName !== 'participant-left',
+      microphone: 'muted',
+      camera: 'on',
+      screenshare: 'not-sharing',
+    },
+    lastSeenAt: 1_752_486_400_000 + index,
+  }));
+
   assert.deepEqual(
     await Promise.all(received),
     participantEvents.map((eventName, index) => [
       eventName,
-      {
-        participantId: `participant-${index}`,
-        participantName: `Participant ${index}`,
-        timestamp: 1_752_486_400_000 + index,
-        state: {
-          active: eventName !== 'participant-left',
-          microphone: 'muted',
-          camera: 'on',
-          screenshare: 'not-sharing',
-        },
-        lastSeenAt: 1_752_486_400_000 + index,
-      },
+      expectedParticipants[index],
     ]),
   );
+  assert.deepEqual(realtimeClient.participants, expectedParticipants);
 });
 
 test('MeetingBot parses participant timeline epoch milliseconds as Dates', () => {

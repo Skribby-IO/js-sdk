@@ -34,7 +34,41 @@ const chatMessage = {
   user_avatar: null,
 };
 
-test('RealtimeClient hydrates, updates, and resets connected context', async (t) => {
+const reconnectedTranscript = {
+  ...transcript,
+  transcript: 'This context came from the reconnect snapshot.',
+  start: 10,
+  end: 11.5,
+};
+
+const reconnectedParticipant = {
+  ...participant,
+  participantId: 'participant-456',
+  participantName: 'Grace Hopper',
+  timestamp: participant.timestamp + 10_000,
+  lastSeenAt: participant.lastSeenAt + 10_000,
+  state: {
+    active: true,
+    microphone: 'unmuted',
+    camera: 'on',
+    screenshare: 'sharing',
+  },
+};
+
+const reconnectedChatMessage = {
+  id: 'message-789',
+  username: 'Grace Hopper',
+  content: 'Reconnect context is current.',
+};
+
+const legacyTranscript = {
+  ...transcript,
+  transcript: 'Legacy transcript-only context.',
+  start: 20,
+  end: 21,
+};
+
+test('RealtimeClient hydrates, updates, and replaces context across reconnects', async (t) => {
   const server = new WebSocketServer({ port: 0 });
   t.after(() => server.close());
   await once(server, 'listening');
@@ -48,20 +82,22 @@ test('RealtimeClient hydrates, updates, and resets connected context', async (t)
     activeSocket = socket;
     connectionNumber += 1;
 
-    const context =
-      connectionNumber === 1
-        ? {
-            transcripts: [transcript],
-            participants: [participant],
-            chat_messages: [chatMessage],
-            status: 'waiting_to_record',
-          }
-        : {
-            transcripts: [],
-            participants: [],
-            chat_messages: [],
-            status: null,
-          };
+    const context = [
+      {
+        transcripts: [transcript],
+        participants: [participant],
+        chat_messages: [chatMessage],
+        status: 'waiting_to_record',
+      },
+      {
+        transcripts: [reconnectedTranscript],
+        participants: [reconnectedParticipant],
+        chat_messages: [reconnectedChatMessage],
+        status: 'recording',
+      },
+      // Older relays sent transcript-only connected snapshots.
+      { transcripts: [legacyTranscript] },
+    ][connectionNumber - 1];
 
     setImmediate(() => {
       socket.send(JSON.stringify({ type: 'connected', data: context }));
@@ -144,7 +180,19 @@ test('RealtimeClient hydrates, updates, and resets connected context', async (t)
   await realtimeClient.connect();
   await secondConnected;
 
-  assert.deepEqual(realtimeClient.transcript, []);
+  assert.deepEqual(realtimeClient.transcript, [reconnectedTranscript]);
+  assert.deepEqual(realtimeClient.participants, [reconnectedParticipant]);
+  assert.deepEqual(realtimeClient.chatMessages, [reconnectedChatMessage]);
+  assert.equal(realtimeClient.status, 'recording');
+
+  await realtimeClient.disconnect();
+  const legacyConnected = new Promise((resolve) => {
+    realtimeClient.on('connected', resolve);
+  });
+  await realtimeClient.connect();
+  await legacyConnected;
+
+  assert.deepEqual(realtimeClient.transcript, [legacyTranscript]);
   assert.deepEqual(realtimeClient.participants, []);
   assert.deepEqual(realtimeClient.chatMessages, []);
   assert.equal(realtimeClient.status, null);

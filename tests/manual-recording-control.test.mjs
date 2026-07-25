@@ -317,10 +317,12 @@ test('bot requests preserve automatic behavior and serialize manual recording co
   await client.createBot({
     ...baseOptions,
     recording_start_mode: 'manual',
+    realtime_audio: true,
     stop_options: { recording_start_timeout: 15 },
   });
   await client.updateBot('bot-1', {
     recording_start_mode: 'manual',
+    realtime_audio: true,
     stop_options: { recording_start_timeout: 20 },
   });
 
@@ -329,20 +331,24 @@ test('bot requests preserve automatic behavior and serialize manual recording co
   assert.deepEqual(
     {
       recording_start_mode: requestBodies[2].recording_start_mode,
+      realtime_audio: requestBodies[2].realtime_audio,
       stop_options: requestBodies[2].stop_options,
     },
     {
       recording_start_mode: 'manual',
+      realtime_audio: true,
       stop_options: { recording_start_timeout: 15 },
     },
   );
   assert.deepEqual(
     {
       recording_start_mode: requestBodies[3].recording_start_mode,
+      realtime_audio: requestBodies[3].realtime_audio,
       stop_options: requestBodies[3].stop_options,
     },
     {
       recording_start_mode: 'manual',
+      realtime_audio: true,
       stop_options: { recording_start_timeout: 20 },
     },
   );

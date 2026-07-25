@@ -117,7 +117,12 @@ export type CreateMeetingBotOptions = {
   initial_chat_message?: string;
   custom_vocabulary?: string[];
   custom_metadata?: Record<string, string>; // max 50 keys, values up to 500 chars
+  /**
+   * Enable Realtime features: meeting events, control actions, and raw audio over WebSockets.
+   * The `realtime_audio` name is retained for API compatibility.
+   */
   realtime_audio?: boolean;
+  /** Manual mode requires a realtime transcription model or `realtime_audio: true`. */
   recording_start_mode?: RecordingStartMode;
   stop_options?: StopOptions;
   authentication?: {
@@ -144,6 +149,12 @@ export type UpdateMeetingBotOptions = {
   transcription_credentials?: string; // UUID for BYOK (bring your own key)
   custom_vocabulary?: string[];
   custom_metadata?: Record<string, string> | null; // max 50 keys, values up to 500 chars; null clears metadata
+  /**
+   * Enable or disable Realtime features. A manual recording bot cannot disable this
+   * unless it is also using a realtime transcription model.
+   */
+  realtime_audio?: boolean;
+  /** Manual mode requires a realtime transcription model or `realtime_audio: true`. */
   recording_start_mode?: RecordingStartMode;
   stop_options?: StopOptions;
   authentication?: {

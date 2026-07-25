@@ -90,6 +90,7 @@ const explicitAutomaticOptions: CreateMeetingBotOptions = {
 const manualOptions: CreateMeetingBotOptions = {
   ...existingAutomaticOptions,
   recording_start_mode: 'manual',
+  realtime_audio: true,
   stop_options: {
     recording_start_timeout: 15,
   },
@@ -97,6 +98,7 @@ const manualOptions: CreateMeetingBotOptions = {
 
 const manualUpdate: UpdateMeetingBotOptions = {
   recording_start_mode: 'manual',
+  realtime_audio: true,
   stop_options: {
     recording_start_timeout: 20,
   },

@@ -1,5 +1,11 @@
 # sdk
 
+## 0.9.0
+
+### Minor Changes
+
+- bd8cabc: Add `recording_start_mode` manual recording controls and `startRecording()`, with participant, chat, and status context in realtime `connected` events.
+
 ## 0.8.0
 
 ### Minor Changes

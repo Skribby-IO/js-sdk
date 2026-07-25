@@ -22,7 +22,7 @@ export type SkribbyClientOptions = {
 };
 
 const SKRIBBY_CLIENT = 'js-sdk';
-const SKRIBBY_CLIENT_VERSION = '0.8.0';
+const SKRIBBY_CLIENT_VERSION = '0.9.0';
 
 export class SkribbyClient {
   private readonly api_url: string;

@@ -1,5 +1,11 @@
 # sdk
 
+## 0.10.2
+
+### Patch Changes
+
+- Add canonical lowercase API stop-reason literals while retaining deprecated uppercase aliases.
+
 ## 0.10.1
 
 ### Patch Changes

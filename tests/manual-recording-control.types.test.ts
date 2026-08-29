@@ -1,6 +1,8 @@
 import type {
   BotStatus,
+  ApiStopReason,
   CreateMeetingBotOptions,
+  LegacyStopReason,
   MeetingBotApiData,
   RealtimeActionMap,
   RealtimeChatMessage,
@@ -26,6 +28,42 @@ type _WaitingToRecordIsAStatus = Assert<
 >;
 type _BreakoutWaitingRoomIsAStatus = Assert<
   'breakout_waiting_room' extends BotStatus ? true : false
+>;
+type _ApiStopReasonsAreCanonical = Assert<
+  IsEqual<
+    ApiStopReason,
+    | 'invalid_meeting_url'
+    | 'waiting_room_timeout'
+    | 'manually_stopped'
+    | 'call_already_finished'
+    | 'request_denied'
+    | 'host_in_another_meeting'
+    | 'recording_start_timeout'
+    | 'breakout_room_timeout'
+    | 'breakout_room_denied'
+    | 'meeting_ended'
+    | 'last_person_detected'
+    | 'silence_detection_triggered'
+    | 'kicked'
+  >
+>;
+type _LegacyStopReasonsRemainAvailable = Assert<
+  IsEqual<
+    LegacyStopReason,
+    | 'INVALID_MEETING_URL'
+    | 'WAITING_ROOM_TIMEOUT'
+    | 'MANUALLY_STOPPED'
+    | 'CALL_ALREADY_FINISHED'
+    | 'REQUEST_DENIED'
+    | 'HOST_IN_ANOTHER_MEETING'
+    | 'RECORDING_START_TIMEOUT'
+    | 'BREAKOUT_ROOM_TIMEOUT'
+    | 'BREAKOUT_ROOM_DENIED'
+    | 'MEETING_ENDED'
+    | 'LAST_PERSON_DETECTED'
+    | 'SILENCE_DETECTION_TRIGGERED'
+    | 'KICKED'
+  >
 >;
 type _RecordingStartTimeoutIsAStopReason = Assert<
   'RECORDING_START_TIMEOUT' extends StopReason ? true : false

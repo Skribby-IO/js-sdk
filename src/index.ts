@@ -24,6 +24,8 @@ export type {
   SkribbyRegion,
   RecordingStartMode,
   BotStatus,
+  ApiStopReason,
+  LegacyStopReason,
   StopReason,
   TranscriptionModelKey,
   TranscriptionModel,

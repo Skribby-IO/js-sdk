@@ -20,7 +20,25 @@ export type BotStatus =
   | 'invalid_credentials'
   | 'failed';
 
-export type StopReason =
+export type ApiStopReason =
+  // Stop reasons for 'not_admitted' status
+  | 'invalid_meeting_url'
+  | 'waiting_room_timeout'
+  | 'manually_stopped'
+  | 'call_already_finished'
+  | 'request_denied'
+  | 'host_in_another_meeting'
+  | 'recording_start_timeout'
+  | 'breakout_room_timeout'
+  | 'breakout_room_denied'
+  // Stop reasons for 'finished' status
+  | 'meeting_ended'
+  | 'last_person_detected'
+  | 'silence_detection_triggered'
+  | 'kicked';
+
+/** @deprecated Use the lowercase API stop-reason literals instead. */
+export type LegacyStopReason =
   // Stop reasons for 'not_admitted' status
   | 'INVALID_MEETING_URL'
   | 'WAITING_ROOM_TIMEOUT'
@@ -29,14 +47,16 @@ export type StopReason =
   | 'REQUEST_DENIED'
   | 'HOST_IN_ANOTHER_MEETING'
   | 'RECORDING_START_TIMEOUT'
-  | 'breakout_room_timeout'
-  | 'breakout_room_denied'
+  | 'BREAKOUT_ROOM_TIMEOUT'
+  | 'BREAKOUT_ROOM_DENIED'
   // Stop reasons for 'finished' status
   | 'MEETING_ENDED'
   | 'LAST_PERSON_DETECTED'
   | 'SILENCE_DETECTION_TRIGGERED'
   | 'KICKED';
-// Note: 'MANUALLY_STOPPED' can appear for both 'not_admitted' and 'finished' statuses
+
+export type StopReason = ApiStopReason | LegacyStopReason;
+// Note: 'manually_stopped' and 'MANUALLY_STOPPED' can appear for both statuses.
 
 export type TranscriptionModelKey =
   | 'none'

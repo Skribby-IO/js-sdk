@@ -1,5 +1,11 @@
 # sdk
 
+## 0.10.0
+
+### Minor Changes
+
+- Add Teams breakout-room status and stop-option types.
+
 ## 0.9.1
 
 ### Patch Changes

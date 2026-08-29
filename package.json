@@ -1,6 +1,6 @@
 {
   "name": "@skribby/sdk",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Typescript SDK for Skribby Meeting Bot API",
   "keywords": [
     "skribby",

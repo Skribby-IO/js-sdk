@@ -29,8 +29,8 @@ export type StopReason =
   | 'REQUEST_DENIED'
   | 'HOST_IN_ANOTHER_MEETING'
   | 'RECORDING_START_TIMEOUT'
-  | 'BREAKOUT_ROOM_TIMEOUT'
-  | 'BREAKOUT_ROOM_DENIED'
+  | 'breakout_room_timeout'
+  | 'breakout_room_denied'
   // Stop reasons for 'finished' status
   | 'MEETING_ENDED'
   | 'LAST_PERSON_DETECTED'

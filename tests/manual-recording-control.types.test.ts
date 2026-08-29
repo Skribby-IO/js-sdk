@@ -30,10 +30,10 @@ type _BreakoutWaitingRoomIsAStatus = Assert<
 type _RecordingStartTimeoutIsAStopReason = Assert<
   'RECORDING_START_TIMEOUT' extends StopReason ? true : false
 >;
-type _BreakoutRoomStopReasonsUseSdkConvention = Assert<
+type _BreakoutRoomStopReasonsUseApiLiterals = Assert<
   IsEqual<
-    Extract<StopReason, 'BREAKOUT_ROOM_TIMEOUT' | 'BREAKOUT_ROOM_DENIED'>,
-    'BREAKOUT_ROOM_TIMEOUT' | 'BREAKOUT_ROOM_DENIED'
+    Extract<StopReason, 'breakout_room_timeout' | 'breakout_room_denied'>,
+    'breakout_room_timeout' | 'breakout_room_denied'
   >
 >;
 type _ConnectedParticipantsUseRealtimeShape = Assert<

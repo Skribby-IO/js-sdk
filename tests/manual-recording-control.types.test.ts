@@ -24,8 +24,17 @@ type _RecordingStartModesAreExact = Assert<
 type _WaitingToRecordIsAStatus = Assert<
   'waiting_to_record' extends BotStatus ? true : false
 >;
+type _BreakoutWaitingRoomIsAStatus = Assert<
+  'breakout_waiting_room' extends BotStatus ? true : false
+>;
 type _RecordingStartTimeoutIsAStopReason = Assert<
   'RECORDING_START_TIMEOUT' extends StopReason ? true : false
+>;
+type _BreakoutRoomStopReasonsUseSdkConvention = Assert<
+  IsEqual<
+    Extract<StopReason, 'BREAKOUT_ROOM_TIMEOUT' | 'BREAKOUT_ROOM_DENIED'>,
+    'BREAKOUT_ROOM_TIMEOUT' | 'BREAKOUT_ROOM_DENIED'
+  >
 >;
 type _ConnectedParticipantsUseRealtimeShape = Assert<
   IsEqual<
@@ -106,6 +115,7 @@ const manualUpdate: UpdateMeetingBotOptions = {
 
 const stopOptions: StopOptions = {
   recording_start_timeout: 10,
+  breakout_room_timeout: 10,
 };
 
 const chatWithoutAvatar: RealtimeChatMessage = {

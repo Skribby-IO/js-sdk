@@ -233,6 +233,58 @@ test('legacy chat envelopes reach typed and untouched raw listeners', async (t) 
   assert.deepEqual(realtimeClient.chatMessages, [chatMessage]);
 });
 
+test('RealtimeClient propagates breakout waiting-room status', async (t) => {
+  const server = new WebSocketServer({ port: 0 });
+  t.after(() => server.close());
+  await once(server, 'listening');
+
+  const address = server.address();
+  assert(address && typeof address === 'object');
+
+  server.once('connection', (socket) => {
+    setImmediate(() =>
+      socket.send(
+        JSON.stringify({
+          type: 'connected',
+          data: {
+            transcripts: [],
+            participants: [],
+            chat_messages: [],
+            status: 'joining',
+          },
+        }),
+      ),
+    );
+  });
+
+  const realtimeClient = new RealtimeClient(`ws://127.0.0.1:${address.port}`);
+  t.after(() => realtimeClient.disconnect());
+
+  const breakoutUpdate = new Promise((resolve) =>
+    realtimeClient.on('status-update', resolve),
+  );
+  await realtimeClient.connect();
+
+  server.clients
+    .values()
+    .next()
+    .value.send(
+      JSON.stringify({
+        type: 'status-update',
+        data: {
+          old_status: 'joining',
+          new_status: 'breakout_waiting_room',
+        },
+      }),
+    );
+
+  assert.deepEqual(await breakoutUpdate, {
+    old_status: 'joining',
+    new_status: 'breakout_waiting_room',
+  });
+  assert.equal(realtimeClient.status, 'breakout_waiting_room');
+});
+
 test('startRecording sends the additive action without changing existing action payloads', async (t) => {
   const server = new WebSocketServer({ port: 0 });
   t.after(() => server.close());

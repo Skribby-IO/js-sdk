@@ -9,6 +9,7 @@ export type BotStatus =
   | 'booting'
   | 'joining'
   | 'waiting_to_record'
+  | 'breakout_waiting_room'
   | 'recording'
   | 'processing'
   | 'transcribing'
@@ -28,6 +29,8 @@ export type StopReason =
   | 'REQUEST_DENIED'
   | 'HOST_IN_ANOTHER_MEETING'
   | 'RECORDING_START_TIMEOUT'
+  | 'BREAKOUT_ROOM_TIMEOUT'
+  | 'BREAKOUT_ROOM_DENIED'
   // Stop reasons for 'finished' status
   | 'MEETING_ENDED'
   | 'LAST_PERSON_DETECTED'
@@ -168,6 +171,7 @@ export type StopOptions = {
   time_limit?: number; // in minutes (max 240)
   recording_start_timeout?: number; // in minutes (1-60, default 15)
   waiting_room_timeout?: number; // in minutes (1-60, default 10)
+  breakout_room_timeout?: number; // in minutes (1-60, default 10)
   empty_meeting_timeout?: number; // in minutes (0-60, default 10, 0 disables)
   last_person_detection?: number; // in minutes (0-60, default 2, 0 disables)
   silence_detection?: number; // in minutes (0-60, 0 disables)

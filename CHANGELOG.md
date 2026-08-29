@@ -1,5 +1,11 @@
 # sdk
 
+## 0.10.1
+
+### Patch Changes
+
+- Correct breakout-room stop-reason literals to match API values.
+
 ## 0.10.0
 
 ### Minor Changes

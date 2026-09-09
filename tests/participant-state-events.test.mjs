@@ -118,10 +118,6 @@ test('MeetingBot parses participant timeline epoch milliseconds as Dates', () =>
     },
   );
 
-  assert.deepEqual(
-    bot.data.participants[0].events.map((event) => event.timestamp),
-    [new Date(0), new Date(1_752_486_400_000)],
-  );
   assert.deepEqual(bot.data.participants[0], {
     name: 'Ada Lovelace',
     avatar: null,

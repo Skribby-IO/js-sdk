@@ -63,42 +63,38 @@ export class SkribbyClient {
     if (body) {
       options.body = JSON.stringify(body);
     }
-    return fetch(url, options)
-      .then(async (response) => {
-        if (!response.ok) {
-          const responseBody = await response.text();
-          let parsedBody: any;
+    return fetch(url, options).then(async (response) => {
+      if (!response.ok) {
+        const responseBody = await response.text();
+        let parsedBody: any;
 
-          try {
-            parsedBody = JSON.parse(responseBody);
-          } catch {
-            parsedBody = responseBody;
-          }
-
-          // Throw specific errors based on status code
-          switch (response.status) {
-            case 401:
-              throw new UnauthorizedError(parsedBody, url, method);
-            case 404:
-              throw new NotFoundError(parsedBody, url, method);
-            case 422:
-              throw new UnprocessableEntityError(parsedBody, url, method);
-            default:
-              throw new ApiRequestError(
-                `API request failed: ${response.status} - ${response.statusText}`,
-                response.status,
-                response.statusText,
-                parsedBody,
-                url,
-                method,
-              );
-          }
+        try {
+          parsedBody = JSON.parse(responseBody);
+        } catch {
+          parsedBody = responseBody;
         }
-        return (await response.json()) as Promise<T>;
-      })
-      .catch((error) => {
-        throw error;
-      });
+
+        // Throw specific errors based on status code
+        switch (response.status) {
+          case 401:
+            throw new UnauthorizedError(parsedBody, url, method);
+          case 404:
+            throw new NotFoundError(parsedBody, url, method);
+          case 422:
+            throw new UnprocessableEntityError(parsedBody, url, method);
+          default:
+            throw new ApiRequestError(
+              `API request failed: ${response.status} - ${response.statusText}`,
+              response.status,
+              response.statusText,
+              parsedBody,
+              url,
+              method,
+            );
+        }
+      }
+      return (await response.json()) as Promise<T>;
+    });
   }
 
   public async getScheduledBots(): Promise<MeetingBot[]> {

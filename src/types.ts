@@ -392,12 +392,20 @@ export type ChatMessageEvent = {
   };
 };
 
+export type RealtimeTranscriptWord = {
+  word: string;
+  start: number;
+  end: number;
+  speaker?: number;
+};
+
 export type RealtimeTranscriptSegment = {
   transcript: string;
   start: number;
   end: number;
   speaker: number;
   speaker_name: string | null;
+  words?: RealtimeTranscriptWord[];
 };
 
 export type RealtimeParticipantStateEventName =

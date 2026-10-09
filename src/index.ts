@@ -60,6 +60,7 @@ export type {
   RecordingApiData,
   RecordingData,
   RealtimeTranscriptSegment,
+  RealtimeTranscriptWord,
   RealtimeParticipantStateEventName,
   RealtimeParticipantEventName,
   RealtimeParticipantEvent,

@@ -405,6 +405,8 @@ export type RealtimeTranscriptSegment = {
   end: number;
   speaker: number;
   speaker_name: string | null;
+  /** The meeting participant who spoke (`participantId` of participant events), when known. */
+  participant_id?: string;
   words?: RealtimeTranscriptWord[];
 };
 

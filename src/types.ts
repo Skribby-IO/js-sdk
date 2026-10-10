@@ -396,7 +396,6 @@ export type RealtimeTranscriptWord = {
   word: string;
   start: number;
   end: number;
-  speaker?: number;
 };
 
 export type RealtimeTranscriptSegment = {

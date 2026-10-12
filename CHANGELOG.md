@@ -1,5 +1,11 @@
 # sdk
 
+## 0.11.0
+
+### Minor Changes
+
+- 38a5739: Add `speaking_participants` (participant id, name and overlap share) and word timings (`words`) to realtime transcript segments.
+
 ## 0.10.2
 
 ### Patch Changes

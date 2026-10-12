@@ -61,6 +61,7 @@ export type {
   RecordingData,
   RealtimeTranscriptSegment,
   RealtimeTranscriptWord,
+  RealtimeTranscriptSpeakingParticipant,
   RealtimeParticipantStateEventName,
   RealtimeParticipantEventName,
   RealtimeParticipantEvent,

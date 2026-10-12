@@ -398,6 +398,12 @@ export type RealtimeTranscriptWord = {
   end: number;
 };
 
+export type RealtimeTranscriptSpeakingParticipant = {
+  participant_id: string;
+  participant_name: string;
+  overlap: number; // 0-1 share of the segment's duration
+};
+
 export type RealtimeTranscriptSegment = {
   transcript: string;
   start: number;
@@ -405,6 +411,7 @@ export type RealtimeTranscriptSegment = {
   speaker: number;
   speaker_name: string | null;
   words?: RealtimeTranscriptWord[];
+  speaking_participants?: RealtimeTranscriptSpeakingParticipant[]; // sorted by overlap, highest first
 };
 
 export type RealtimeParticipantStateEventName =

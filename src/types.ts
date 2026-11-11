@@ -73,8 +73,10 @@ export type TranscriptionModelKey =
   | 'aws/transcribe-streaming'
   | 'soniox/stt-async-v4'
   | 'soniox/stt-async-v5'
+  | 'soniox/stt-async-v6'
   | 'soniox/stt-rt-v4'
   | 'soniox/stt-rt-v5'
+  | 'soniox/stt-rt-v6'
   | 'assemblyai/universal-2'
   | 'assemblyai/universal-3-5-pro'
   // Deprecated compatibility alias; the platform routes this to 'assemblyai/universal-3-5-pro'.

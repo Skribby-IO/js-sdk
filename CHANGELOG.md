@@ -1,5 +1,11 @@
 # sdk
 
+## 0.11.1
+
+### Patch Changes
+
+- d89b1e2: Add the `soniox/stt-async-v6` and `soniox/stt-rt-v6` transcription model keys.
+
 ## 0.11.0
 
 ### Minor Changes
